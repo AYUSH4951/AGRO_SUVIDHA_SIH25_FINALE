@@ -1,0 +1,443 @@
+/* ============ PAGE WRAPPER ============ */
+.farmer-profile-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom right, #e4fbe8, white, #d9f7df);
+  font-family: "Poppins", sans-serif;
+}
+
+/* ============ HEADER ============ */
+.farmer-profile-header {
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.farmer-profile-logo-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.farmer-profile-title {
+  color: #16a34a;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.farmer-profile-badge {
+  background: #dcfce7;
+  color: #16a34a;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid #22c55e;
+}
+
+/* ============ BACKGROUND ============ */
+.farmer-profile-bg {
+  background: linear-gradient(135deg, #e4fbe8 0%, #f0fdf4 50%, #d9f7df 100%);
+}
+
+/* ============ BODY ============ */
+.farmer-profile-body {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.farmer-profile-container-main {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* ============ PROFILE CARD ============ */
+.farmer-profile-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dcfce7;
+}
+
+/* ============ HEADER SECTION ============ */
+.farmer-profile-header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.farmer-profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+}
+
+.farmer-profile-avatar-icon {
+  color: #16a34a;
+  width: 40px;
+  height: 40px;
+}
+
+.farmer-profile-card-title {
+  color: #16a34a;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+}
+
+/* ============ ALERTS ============ */
+.farmer-profile-alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.error-alert {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.success-alert {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.farmer-profile-alert button {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: inherit;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.farmer-profile-alert button:hover {
+  opacity: 0.7;
+}
+
+/* ============ FIELDS ============ */
+.farmer-profile-field {
+  margin-bottom: 22px;
+}
+
+.farmer-profile-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.farmer-profile-field-icon {
+  color: #16a34a;
+  width: 18px;
+  height: 18px;
+}
+
+.farmer-profile-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f9fafb;
+  border: 1.5px solid #dcfce7;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+}
+
+.farmer-profile-input-wrapper:hover:not(.read-only) {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.farmer-profile-input-wrapper.read-only {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.farmer-profile-input-wrapper.editing {
+  border-color: #16a34a;
+  background: #fafbf9;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+.farmer-profile-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #1f2937;
+  outline: none;
+  font-family: inherit;
+}
+
+.farmer-profile-input:disabled {
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.farmer-profile-input::placeholder {
+  color: #9ca3af;
+}
+
+/* ============ ACTION BUTTONS ============ */
+.farmer-profile-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.farmer-profile-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+/* Edit Button */
+.edit-btn {
+  background: #e0f2fe;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+}
+
+.edit-btn:hover {
+  background: #bae6fd;
+  color: #0c4a6e;
+}
+
+/* Save Button */
+.save-btn {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.save-btn:hover {
+  background: #bbf7d0;
+  color: #15803d;
+}
+
+/* Cancel Button */
+.cancel-btn {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.cancel-btn:hover {
+  background: #fecaca;
+  color: #7f1d1d;
+}
+
+/* ============ LOCATION ACTIONS ============ */
+.farmer-profile-location-actions {
+  margin: 24px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.detect-location-btn {
+  width: 100%;
+  background: #16a34a;
+  color: white;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+}
+
+.detect-location-btn:hover:not(:disabled) {
+  background: #15803d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.detect-location-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============ COORDINATES INFO ============ */
+.farmer-profile-coordinates {
+  background: #f0fdf4;
+  border: 1px solid #dcfce7;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 20px 0;
+}
+
+.farmer-profile-coordinates p {
+  margin: 0;
+  color: #15803d;
+  font-size: 0.9rem;
+  word-break: break-all;
+}
+
+/* ============ LOGOUT SECTION ============ */
+.farmer-profile-logout-section {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #dcfce7;
+}
+
+.logout-btn {
+  width: 100%;
+  background: #ef4444;
+  color: white;
+  padding: 12px 16px;
+  font-size: 1rem;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* ============ LOADING STATE ============ */
+.farmer-profile-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px 20px;
+}
+
+.farmer-profile-loading .spinner {
+  width: 40px;
+  height: 40px;
+  color: #16a34a;
+  animation: spin 1s linear infinite;
+}
+
+.farmer-profile-loading p {
+  color: #16a34a;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .farmer-profile-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .farmer-profile-card {
+    padding: 24px;
+    margin: 0 12px;
+  }
+
+  .farmer-profile-title {
+    font-size: 1.6rem;
+  }
+
+  .farmer-profile-card-title {
+    font-size: 1.5rem;
+  }
+
+  .farmer-profile-input-wrapper {
+    padding: 10px 12px;
+  }
+
+  .farmer-profile-btn {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+
+  .detect-location-btn {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  .logout-btn {
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .farmer-profile-container-main {
+    max-width: 100%;
+  }
+
+  .farmer-profile-card {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .farmer-profile-avatar {
+    width: 70px;
+    height: 70px;
+  }
+
+  .farmer-profile-avatar-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .farmer-profile-title {
+    font-size: 1.4rem;
+  }
+
+  .farmer-profile-label {
+    font-size: 0.9rem;
+  }
+
+  .farmer-profile-input {
+    font-size: 0.95rem;
+  }
+}

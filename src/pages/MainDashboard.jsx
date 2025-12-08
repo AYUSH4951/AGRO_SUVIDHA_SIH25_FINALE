@@ -806,7 +806,7 @@ export default function Home() {
                 <ChevronRight className="chevron" />
               </button>
 
-              <button>
+              <button onClick={() => navigate("/setlanguage")}>
                 <div className="menu-icon">
                   <Globe />
                 </div>
@@ -817,7 +817,7 @@ export default function Home() {
                 <ChevronRight className="chevron" />
               </button>
 
-              <button>
+              <button onClick={() => navigate("/Privacy")}>
                 <div className="menu-icon">
                   <Shield />
                 </div>
@@ -828,7 +828,7 @@ export default function Home() {
                 <ChevronRight className="chevron" />
               </button>
 
-              <button>
+              <button onClick={() => navigate("/help")}>
                 <div className="menu-icon">
                   <HelpCircle />
                 </div>
@@ -948,4 +948,4 @@ export default function Home() {
       </div>
     </>
   );
-}
+}   
