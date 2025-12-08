@@ -1,0 +1,626 @@
+/* FieldOfficerResult.css */
+
+:root {
+  --green-main: #00b35c;
+  --green-dark: #009247;
+  --green-soft: #e9f9f1;
+  --border-color: #e4e7ec;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --radius-lg: 16px;
+  --radius-md: 10px;
+}
+
+/* Light mint background */
+body {
+  background: #e9f9f1;
+}
+
+/* Main white card */
+.advisor-form-container {
+  max-width: 1280px;
+  margin: 40px auto;
+  padding: 32px 48px 40px;
+  border-radius: 18px;
+  background-color: #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+/* Title + description */
+.advisor-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin: 0 0 4px;
+}
+
+.advisor-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+/* Form layout */
+.advisor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 18px;
+}
+
+.row .form-group {
+  flex: 1;
+}
+
+/* Form group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.required {
+  color: #ef4444;
+  margin-left: 2px;
+  font-weight: 600;
+}
+
+.optional-label {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--green-soft);
+  font-size: 10px;
+  color: var(--green-dark);
+  font-weight: 500;
+}
+
+/* Inputs and selects */
+.advisor-form input[type="number"],
+.advisor-form input[type="text"],
+.advisor-form select,
+.advisor-form textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  outline: none;
+  background-color: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.advisor-form input::placeholder,
+.advisor-form textarea::placeholder {
+  color: #9ca3af;
+}
+
+.advisor-form input:focus,
+.advisor-form select:focus,
+.advisor-form textarea:focus {
+  border-color: rgba(16, 185, 129, 0.7);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.16);
+}
+
+/* Radio buttons */
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 4px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.radio-group input[type="radio"] {
+  accent-color: var(--green-main);
+}
+
+/* Soil section + dashed box */
+.section-label {
+  margin-top: 10px;
+}
+
+.dashed-box {
+  margin-top: 6px;
+  padding: 22px 20px;
+  border-radius: 16px;
+  border: 2px dashed #d4d7dd;
+  background: #fbfbfb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  min-height: 140px;
+}
+
+.dashed-box input[type="file"] {
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.dashed-box p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.file-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Submit button */
+.get-recommendation-btn {
+  margin-top: 26px;
+  width: 100%;
+  padding: 15px 18px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background-image: linear-gradient(90deg, #00b35c, #00c96a);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.5);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.1s ease;
+}
+
+.get-recommendation-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(16, 185, 129, 0.6);
+  opacity: 0.97;
+}
+
+.get-recommendation-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(16, 185, 129, 0.5);
+}
+
+/* RESULTS SECTION */
+
+.advisor-results {
+  margin-top: 40px;
+  text-align: center;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.results-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #e0fbe5;
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.results-title {
+  margin: 12px 0 2px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #022c22;
+}
+
+.results-subtitle {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Three-card grid */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 32px;
+  row-gap: 24px;
+}
+
+/* Individual crop card */
+.crop-card {
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+  display: flex;
+  flex-direction: column;
+  min-height: 580px; /* taller for breathing room */
+  width: 100%;
+}
+
+/* Green top area */
+.crop-card-header {
+  padding: 22px 24px;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ecfdf5;
+}
+
+.crop-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  background: rgba(15, 118, 110, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.crop-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* White content area */
+.crop-desc {
+  padding: 20px 24px 10px;
+  margin: 0;
+  font-size: 14px;
+  color: #111827;   /* darker main text */
+  text-align: left;
+  line-height: 1.6;
+}
+
+/* Two-column layout for label & value, gives aligned vertical columns */
+.crop-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: flex-start;
+  column-gap: 8px;
+  padding: 6px 24px;
+  font-size: 13px;
+  color: #111827;   /* darker */
+}
+
+/* Extra bottom space after last row so text doesn't touch edge */
+.crop-card .crop-row:last-of-type {
+  padding-bottom: 18px;
+}
+
+.crop-row .label {
+  font-weight: 700;
+  color: #111827;
+}
+
+.crop-row .value {
+  font-weight: 500;
+}
+
+.crop-row .value.highlight {
+  color: #15803d;
+  font-weight: 700;
+}
+
+/* Risk pills */
+.pill {
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Low risk – bright green */
+.pill-low {
+  background: #bbf7d0;
+  color: #166534;
+  border: 1px solid #16a34a;
+}
+
+/* Medium/other – bright amber/orange */
+.pill-medium {
+  background: #fed7aa;
+  color: #9a3412;
+  border: 1px solid #f97316;
+}
+
+/* (Details button is no longer used, but kept if needed later) */
+.details-btn {
+  margin: 14px 22px 18px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid #16a34a;
+  background: #ecfdf5;
+  color: #166534;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.details-btn:hover {
+  background: #16a34a;
+  color: #ecfdf5;
+  box-shadow: 0 10px 24px rgba(22, 163, 74, 0.35);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .advisor-form-container {
+    margin: 16px;
+    padding: 22px 18px 26px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .crop-row {
+    grid-template-columns: 1fr;
+  }
+}
+/* ===== Planted-crop advisory layout ===== */
+.planted-advisory {
+  margin-top: 36px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Top green header card */
+.advisory-header-card {
+  background: linear-gradient(90deg, #16c35e, #22d46c);
+  border-radius: 18px 18px 0 0;
+  padding: 26px 34px 28px;          /* slightly larger */
+  color: #ecfdf5;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-weight: 700;
+  text-align: center; 
+}
+
+.adv-top-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.adv-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.adv-summary-line {
+  margin: 6px auto 0;              /* center and keep on one block */
+  font-size: 16px;
+  max-width: 900px;                /* keep width reasonable */
+  line-height: 1.7;
+  font-weight: 700;
+}
+/* Stats row (Expected yield + Market price) */
+.adv-stats-row {
+  background: #e9f9f1;
+  border-radius: 0 0 18px 18px;
+  padding: 18px 34px 22px;
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid #d1f3de;
+}
+
+.adv-stat-card {
+  flex: 1;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+  font-weight: 700;
+}
+
+.adv-stat-label {
+  font-size: 15px;
+  color: #dcfce7;
+  font-weight: 700;
+}
+
+.adv-stat-value {
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+/* Generic section block */
+.adv-section {
+  margin-top: 24px;                 /* gap between boxes */
+  padding: 20px 26px 22px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+/* Headings with small icons */
+.adv-section h4 {
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adv-section h4::before {
+  content: "";
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* Icons per section */
+.adv-fert h4::before {
+  content: "🧪";
+  background: #fef9c3;
+}
+
+.adv-irrigation h4::before {
+  content: "💧";
+  background: #dbeafe;
+}
+
+.adv-risks h4::before {
+  content: "🐛";
+  background: #fee2e2;
+}
+
+.adv-preventive h4::before {
+  content: "✅";
+  background: #dcfce7;
+}
+
+.adv-warning h4::before {
+  content: "⚠️";
+  background: #fef3c7;
+}
+
+/* Brighter section backgrounds */
+.adv-fert {
+  background: #fff5d1;
+}
+
+.adv-irrigation {
+  background: #e5f0ff;
+}
+
+.adv-risks {
+  background: #ffe3e8;
+}
+
+.adv-preventive {
+  background: #ddfbe7;
+}
+
+.adv-warning {
+  background: #ffe9d3;
+}
+
+/* Lists inside sections */
+.adv-section ul {
+  margin: 8px 0 0;
+  padding-left: 24px;
+  font-size: 15px;
+  color: #111827;
+  line-height: 1.8;
+  text-align: left;
+  font-weight: 500;                 /* descriptive text regular */
+}
+
+.adv-section li + li {
+  margin-top: 6px;
+}
+
+/* Irrigation + pest lists: keep same regular weight, no extra bold on first line */
+.adv-irrigation ul,
+.adv-irrigation li,
+.adv-risks ul,
+.adv-risks li {
+  font-weight: 500;
+}
+
+.adv-irrigation li::first-line,
+.adv-risks li::first-line {
+  font-weight: 500;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .advisory-header-card {
+    padding: 20px 18px 22px;
+  }
+
+  .adv-stats-row {
+    flex-direction: column;
+    padding: 16px 18px 20px;
+  }
+
+  .adv-stat-card {
+    width: 100%;
+  }
+}
+/* Loading card */
+
+.loading-card {
+  margin-top: 28px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.loading-inner {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+.loading-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: #e0fbef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #16a34a;
+  font-size: 32px;
+}
+
+.loading-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  text-align: center;
+}
+
+.loading-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+}

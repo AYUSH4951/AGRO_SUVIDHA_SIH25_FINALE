@@ -1,0 +1,259 @@
+/* src/styles/MandiPrice.css — Updated according to reference PWA style */
+
+/* -----------------------------------------
+   THEME VARIABLES (REFERENCE APPLIED)
+------------------------------------------ */
+:root {
+  --green-1: #22c55e;
+  --green-2: #10b981;
+  --green-3: #0d9488;
+
+  --bg-1: #f0fdf4;
+  --bg-2: #ecfdf5;
+  --bg-3: #f0fdfa;
+
+  --card-bg: rgba(255, 255, 255, 0.9);
+
+  --text-dark: #1f2937;
+  --text-muted: #4b5563;
+
+  --radius: 16px;
+  --shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+  --header-height: 74px;
+  --page-pad: 20px;
+
+  --left-width: 360px;
+}
+
+/* -----------------------------------------
+   RESET
+------------------------------------------ */
+* {
+  box-sizing: border-box;
+}
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* -----------------------------------------
+   PAGE BACKGROUND (REFERENCE)
+------------------------------------------ */
+body {
+  background: linear-gradient(to bottom right, var(--bg-1), var(--bg-2), var(--bg-3));
+  font-family: Arial, sans-serif;
+  color: var(--text-dark);
+}
+
+/* -----------------------------------------
+   HEADER (REFERENCE)
+------------------------------------------ */
+.mandi-header {
+  background: linear-gradient(to right, var(--green-1), var(--green-2), var(--green-3));
+  padding: 20px;
+  height: var(--header-height);
+  color: white;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.mandi-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.mandi-header p {
+  margin: 4px 0 0;
+  opacity: 0.9;
+}
+
+/* Back Button */
+.mandi-back {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.mandi-rupee {
+  background: rgba(255,255,255,0.25);
+  padding: 8px;
+  border-radius: 12px;
+  display: flex;
+}
+
+/* -----------------------------------------
+   MAIN GRID (REFERENCE)
+------------------------------------------ */
+.mandi-main {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;   /* STACKS LEFT THEN RIGHT */
+  gap: 20px;
+}
+
+
+/* LEFT SIDE */
+.mandi-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 1311px;
+}
+
+/* RIGHT SIDE */
+.mandi-right {
+  width: 100%;
+}
+
+/* -----------------------------------------
+   CARD (REFERENCE)
+------------------------------------------ */
+.mandi-card,
+.card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.mandi-card h2,
+.card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* -----------------------------------------
+   GRID INPUTS (REFERENCE)
+------------------------------------------ */
+.grid {
+  display: grid;
+  gap: 15px;
+}
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+}
+
+/* -----------------------------------------
+   BUTTONS (REFERENCE)
+------------------------------------------ */
+.btn-primary,
+.mandi-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, #16a34a, #059669);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary:hover,
+.mandi-btn-primary:hover {
+  background: linear-gradient(to right, #15803d, #047857);
+}
+
+.mandi-btn-voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+.mandi-btn-voice:hover {
+  background: #1d4ed8;
+}
+
+/* -----------------------------------------
+   LOCATION BOX
+------------------------------------------ */
+.mandi-location-box {
+  margin-top: 12px;
+  background: #eff6ff;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #bfdbfe;
+  color: #1e3a8a;
+}
+
+/* -----------------------------------------
+   RESULT ROWS (REFERENCE)
+------------------------------------------ */
+.mandi-item {
+  padding: 16px 0;          /* more vertical padding */
+  margin-bottom: 14px;      /* increases spacing between items */
+  border-bottom: 1px solid #e5e7eb;
+}
+
+
+.mandi-item:last-child {
+  border-bottom: none;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.badge.green {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.profit {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+/* -----------------------------------------
+   RESPONSIVE (REFERENCE)
+------------------------------------------ */
+@media (max-width: 900px) {
+  .mandi-main {
+    grid-template-columns: 1fr;
+    padding-top: 30px;
+  }
+}

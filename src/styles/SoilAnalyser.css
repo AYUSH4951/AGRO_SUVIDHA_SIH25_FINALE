@@ -1,0 +1,165 @@
+/* src/styles/SoilAnalyser.css */
+
+/* ----------------------------------------------------
+   BASE PAGE
+----------------------------------------------------- */
+.analyser-root {
+  margin: 0;
+  min-height: 100vh;
+  background: white;
+  font-family: Arial, sans-serif;
+  color: #01752c;
+}
+
+/* ----------------------------------------------------
+   HEADER
+----------------------------------------------------- */
+.analyser-header {
+  background: linear-gradient(to right, #fbbf24, #f97316, #dc2626);
+  color: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.analyser-header h1 { margin: 0; font-size: 24px; }
+.analyser-header h2 { margin: 0; font-size: 18px; }
+.analyser-header p { margin: 4px 0 0; opacity: 0.9; }
+
+/* Back Button */
+.analyser-back {
+  background: linear-gradient(to bottom right, #fde68a, #fbbf24, #f59e0b);
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.analyser-icon-bg {
+  background: rgba(255,255,255,0.25);
+  padding: 10px;
+  border-radius: 12px;
+}
+
+/* ----------------------------------------------------
+   MAIN CONTAINER
+----------------------------------------------------- */
+.analyser-container {
+  padding: 24px;
+}
+
+/* ----------------------------------------------------
+   CARD
+----------------------------------------------------- */
+.analyser-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.analyser-card label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Inputs */
+.analyser-card input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 12px;
+}
+
+/* Buttons */
+.analyser-btn-blue {
+  background: #16a34a;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+}
+
+.analyser-btn-outline {
+  background: #16a34a;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #045b15;
+}
+
+.analyser-btn-green {
+  background: #16a34a;
+  color: white;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.analyser-btn-capture {
+  background: linear-gradient(to bottom right, #fde68a, #fbbf24, #f59e0b);
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* File row */
+.analyser-file-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.analyser-file-name {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Hidden inputs */
+.analyser-hidden {
+  display: none;
+}
+
+/* Image preview */
+.analyser-preview img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  margin-top: 12px;
+}
+
+/* Results */
+.analyser-results-box {
+  background: #f3f4f6;
+  padding: 12px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+}

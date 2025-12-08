@@ -1,0 +1,273 @@
+/* ============ PAGE WRAPPER ============ */
+.signup-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Green Theme */
+.farmer-bg {
+  background: linear-gradient(to bottom right, #e4fbe8, white, #d9f7df);
+}
+
+.farmer-text {
+  color: #16a34a;
+  font-size: 2.7rem;
+  margin-bottom: 12px;
+}
+
+.farmer-icon-bg {
+  background-color: #dcfce7;
+}
+
+.farmer-icon {
+  color: #16a34a;
+}
+
+.farmer-badge {
+  background: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #22c55e;
+}
+
+.farmer-overlay {
+  background: linear-gradient(to right, #16a34a90, #0f9a4790);
+}
+
+.farmer-border {
+  border: 1px solid #22c55e;
+}
+
+.farmer-btn {
+  background: #16a34a;
+}
+.farmer-btn:hover {
+  background: #15803d;
+}
+
+.farmer-link {
+  color: #16a34a;
+}
+
+/* ============ HEADER ============ */
+.signup-header {
+  padding: 24px;
+  text-align: center;
+}
+
+/* logo-wrap */
+.signup-logo-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 5px;
+}
+
+/* icon circle */
+.icon-circle {
+  padding: 12px;
+  border-radius: 50%;
+}
+
+.signup-badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* ============ BODY ============ */
+.signup-body {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* container */
+.signup-container {
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* ============ HERO ============ */
+.signup-hero-card {
+  position: relative;
+  height: 130px;
+  overflow: hidden;
+  border-radius: 14px;
+  margin-bottom: 20px;
+}
+
+.signup-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.signup-hero-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.signup-hero-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+/* ============ CARD ============ */
+.signup-card {
+  background: white;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.signup-title {
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ============ FIELDS ============ */
+.signup-field {
+  margin-bottom: 22px; /* Match officer spacing */
+}
+
+.signup-field-wrap {
+  position: relative;
+}
+
+.signup-field-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+}
+
+.signup-field-wrap input {
+  width: 100%;
+  padding: 10px 12px;
+  padding-left: 38px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+.signup-eye-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ============ TOGGLE (MATCHES OFFICER VERSION) ============ */
+.signup-toggle-box {
+  display: flex;
+  width: 100%;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  gap: 10px; /* Fixed toggle spacing */
+}
+
+.signup-toggle-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  color: #6b7280;
+}
+
+.signup-toggle-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.farmer-active {
+  background: #16a34a;
+  color: white;
+}
+
+/* ============ TERMS (MATCHES OFFICER VERSION) ============ */
+.signup-terms-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.signup-terms-row input {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============ BUTTON ============ */
+.signup-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.signup-btn-icon {
+  margin-right: 6px;
+}
+
+.signup-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============ SIGN-IN LINK ============ */
+.signup-signin-row {
+  text-align: center;
+  font-size: 14px;
+}
+
+/* ============ FORGOT PASSWORD LINK ============ */
+.signup-forgot-password-row {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.farmer-forgot-link {
+  color: #16a34a;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.farmer-forgot-link:hover {
+  color: #15803d;
+  text-decoration: underline;
+}
+
+/* ============ LOGO WRAPPER ============ */
+.signup-logo-image-wrapper {
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signup-app-logo {
+  width: 190px;
+  height: auto;
+  object-fit: contain;
+}

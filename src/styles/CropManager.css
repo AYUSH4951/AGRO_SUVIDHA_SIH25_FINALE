@@ -1,0 +1,339 @@
+:root{
+  --crop-primary: #04491b;
+  --crop-primary-50: #f0fdf4;
+  --crop-primary-100: #dcfce7;
+  --crop-primary-200: #bbf7d0;
+  --crop-bg: #f9fafb;
+  --crop-card: #ffffff;
+  --crop-border: #e5e7eb;
+  --crop-text: #111827;
+  --crop-green-50: #f0fdf4;
+  --crop-green-600: #16a34a;
+  --crop-yellow-50: #fffbeb;
+  --crop-yellow-600: #d97706;
+  --crop-red-50: #fef2f2;
+  --crop-red-600: #dc2626;
+}
+
+/* Reset / box sizing */
+*{box-sizing:border-box}
+
+/* Body safe spacing so this file doesn't assume control of the entire app */
+body{
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--crop-bg);
+  color: var(--crop-text);
+  margin: 0;
+}
+
+/* Topbar (prefixed to avoid clash) */
+.crop-topbar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #059669;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.crop-topbar-logo{
+  font-size: 25px;
+  font-weight: bold;
+  padding-left: 4px;
+}
+
+.crop-nav-buttons{
+  display:flex;
+  gap:8px;
+  flex-wrap:nowrap;
+}
+
+.crop-nav-buttons button{
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.crop-nav-buttons button:hover{
+  background: rgba(255,255,255,0.15);
+}
+
+/* push content below topbar */
+.crop-container{
+  padding-top: 70px; /* prevents overlap */
+  padding-left: 16px;
+  padding-right: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header area */
+.crop-header{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-top:10px;
+}
+
+.crop-header-row{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.crop-title{
+  margin:0;
+  font-size:20px;
+  color:var(--crop-primary);
+}
+
+.crop-subtitle{
+  margin:0;
+  color:var(--crop-primary);
+  font-size:14px;
+}
+
+.crop-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:8px;
+}
+
+/* Buttons/selects */
+.crop-btn{
+  padding:10px 14px;
+  border:1px solid var(--crop-primary-200);
+  background:var(--crop-card);
+  color:var(--crop-primary);
+  cursor:pointer;
+  border-radius:8px;
+  font-weight:600;
+}
+
+.crop-btn-primary{
+  background:var(--crop-primary);
+  color:#fff;
+  border-color:var(--crop-primary);
+}
+
+.crop-btn-outline{
+  background:transparent;
+  color:var(--crop-primary);
+  border-color:var(--crop-primary-200);
+}
+
+.crop-select, .crop-input{
+  height:38px;
+  padding:0 10px;
+  border:1px solid var(--crop-primary-200);
+  border-radius:8px;
+  background:#fff;
+  color:var(--crop-primary);
+}
+
+/* Grid of cards */
+.crop-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:16px;
+  margin-top:16px;
+}
+
+/* Card */
+.crop-card{
+  background:var(--crop-card);
+  border:1px solid var(--crop-primary-100);
+  border-radius:12px;
+  overflow:hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.crop-card:hover{
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.crop-card-header{
+  padding:16px;
+  border-bottom:1px solid var(--crop-primary-100);
+}
+
+.crop-card-title{
+  margin:0;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--crop-primary);
+}
+
+.crop-card-sub{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.crop-badge{
+  display:inline-block;
+  padding:2px 8px;
+  font-size:12px;
+  border-radius:999px;
+  border:1px solid var(--crop-primary-100);
+  color:var(--crop-primary);
+  background:#fff;
+}
+
+.crop-badge-soft{
+  border:none;
+}
+
+/* stage classes */
+.crop-stage-germination{ background:#dcfce7; color:#166534; }
+.crop-stage-growing{ background:#bbf7d0; color:#166534; }
+.crop-stage-flowering{ background:#d1fae5; color:#065f46; }
+.crop-stage-ready{ background:#a7f3d0; color:#065f46; }
+
+/* health classes */
+.crop-health-excellent{ background:var(--crop-green-50); color:var(--crop-green-600); }
+.crop-health-good{ background:var(--crop-green-50); color:var(--crop-green-600); }
+.crop-health-fair{ background:var(--crop-yellow-50); color:var(--crop-yellow-600); }
+.crop-health-poor{ background:var(--crop-red-50); color:var(--crop-red-600); }
+
+/* Card content */
+.crop-card-content{
+  padding:16px;
+  display:grid;
+  gap:14px;
+}
+
+.crop-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:14px;
+}
+
+.crop-row span:first-child{
+  color:var(--crop-primary);
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+/* Progress */
+.crop-progress{
+  height:10px;
+  background:var(--crop-primary-100);
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.crop-progress-bar{
+  height:100%;
+  background:var(--crop-primary);
+  width:0;
+  transition: width 0.4s ease;
+}
+
+/* two-col layout inside card */
+.crop-two-col{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:12px;
+}
+
+@media(min-width:768px){
+  .crop-two-col { grid-template-columns: 1fr 1fr; }
+  .crop-grid { grid-template-columns: 1fr 1fr; } /* show two cards per row on wider screens */
+}
+
+/* note */
+.crop-note{
+  padding:12px;
+  background:var(--crop-primary-50);
+  border:1px solid var(--crop-primary-100);
+  border-radius:10px;
+  font-size:14px;
+  color:var(--crop-primary);
+}
+
+/* card actions */
+.crop-card-actions{
+  display:flex;
+  gap:8px;
+}
+
+/* Icons */
+.crop-icon{ display:inline-flex; width:16px; height:16px; color:var(--crop-primary); }
+.crop-icon svg{ width:16px; height:16px; display:block; }
+
+/* Modal */
+.crop-modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,0.45);
+  padding:16px;
+  z-index:1200;
+}
+
+.crop-modal-open{ display:flex; }
+
+.crop-modal-content{
+  background:#fff;
+  border-radius:12px;
+  width:100%;
+  max-width:600px;
+  padding:16px;
+}
+
+.crop-modal-title{
+  margin:0 0 12px;
+  font-size:18px;
+  color:var(--crop-primary);
+}
+
+/* Modal grid */
+.crop-grid-2{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+@media(min-width:640px){
+  .crop-grid-2{ grid-template-columns:1fr 1fr; }
+}
+
+.crop-field{ display:grid; gap:6px; }
+.crop-label{ font-size:12px; color:var(--crop-primary); }
+
+.crop-modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:8px;
+}
+
+/* Responsive tweaks */
+@media(max-width:420px){
+  .crop-topbar-logo{ font-size:22px; }
+  .crop-nav-buttons{ gap:2px; }
+  .crop-nav-buttons button{ padding:6px 8px; font-size:14px; }
+  .crop-grid{ gap:12px; }
+}

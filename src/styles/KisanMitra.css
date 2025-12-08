@@ -1,0 +1,160 @@
+/* ===============================
+   ROOT
+================================*/
+.kisanmitra-root-container {
+  background: #f4f4f4;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===============================
+   CHAT CONTAINER
+================================*/
+.kisanmitra-chat-container {
+  width: 400px;
+  height: 600px;
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ===============================
+   HEADER
+================================*/
+.kisanmitra-chat-header {
+  background: #16a34a;
+  padding: 15px;
+  color: white;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.kisanmitra-back-btn {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.kisanmitra-back-btn:hover {
+  background: rgba(255,255,255,0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* ===============================
+   LANGUAGE SELECT
+================================*/
+.kisanmitra-lang-select {
+  margin: 8px;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 383px;
+}
+
+/* ===============================
+   CHAT BOX
+================================*/
+.kisanmitra-chat-box {
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* ===============================
+   MESSAGES
+================================*/
+.kisanmitra-message {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.kisanmitra-user-message {
+  align-self: flex-end;
+  background: #16a34a;
+  color: white;
+  border-bottom-right-radius: 0;
+}
+
+.kisanmitra-bot-message {
+  align-self: flex-start;
+  background: #e5e5ea;
+  color: black;
+  border-bottom-left-radius: 0;
+}
+
+/* ===============================
+   INPUT AREA
+================================*/
+.kisanmitra-chat-input {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-top: 1px solid #ddd;
+  gap: 6px;
+}
+
+.kisanmitra-chat-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 12px;
+  background: #f7f7f7;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* ===============================
+   ROUND BUTTONS
+================================*/
+.kisanmitra-round-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.kisanmitra-mic-btn {
+  background: #16a34a;
+}
+
+.kisanmitra-mic-btn.listening {
+  background: #e53935;
+  box-shadow: 0 0 10px rgba(229,57,53,0.8);
+}
+
+.kisanmitra-send-btn {
+  background: #16a34a;
+}
+
+/* Reduce BOTH mic + send icon size */
+.kisanmitra-round-btn svg {
+  width: 30px;   /* change to 14px or 12px if you want smaller */
+  height: 30px;
+}

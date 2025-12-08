@@ -1,0 +1,300 @@
+/* RoleSelection.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f0fdf4, #ffffff);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Styles */
+.header-section {
+  background: linear-gradient(to right, #16a34a, #059669);
+  color: white;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Back button on left */
+  gap: 1rem;
+  position: relative;
+}
+
+.back-button {
+  flex-shrink: 0;
+}
+
+.header-content {
+  flex: 1;
+  text-align: center;
+}
+
+.emoji {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.875rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  color: #bbf7d0;
+}
+
+/* Button Styles */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: white;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #15803d;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+  flex: 1;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .content-wrapper {
+    padding: 3rem 1rem;
+  }
+}
+
+/* Cards Container */
+.cards-container {
+  max-width: 72rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Card Styles */
+.card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.role-card {
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.role-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+.farmer-card:hover {
+  border-color: #22c55e;
+}
+
+.officer-card:hover {
+  border-color: #3b82f6;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-padding {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .card-padding {
+    padding: 2rem;
+  }
+}
+
+/* Card Header */
+.card-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+}
+
+.farmer-icon {
+  background-color: #dcfce7;
+}
+
+.officer-icon {
+  background-color: #dbeafe;
+}
+
+.icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.farmer-icon .icon {
+  color: #16a34a;
+}
+
+.officer-icon .icon {
+  color: #2563eb;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.card-description {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* Features List */
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+/* Transparent circle with dark tick */
+.tick-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid #000;
+  color: #000;
+  font-weight: bold;
+  font-size: 12px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.feature-text {
+  font-size: 0.875rem;
+}
+
+/* Continue Button */
+.continue-btn {
+  width: 100%;
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.farmer-btn {
+  background-color: #16a34a;
+}
+
+.farmer-btn:hover {
+  background-color: #15803d; /* Darker green on hover */
+}
+
+.officer-btn {
+  background-color: #2563eb;
+}
+
+.officer-btn:hover {
+  background-color: #1d4ed8; /* Darker blue on hover */
+}
+
+.checkmark {
+  margin-top: 0.25rem;
+}
+
+.check-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.farmer-check {
+  color: #16a34a;
+}
+
+.officer-check {
+  color: #2563eb;
+}
+
+/* Additional Info */
+.additional-info {
+  max-width: 42rem;
+  margin: 2rem auto 0;
+  text-align: center;
+}
+
+.info-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+} 
