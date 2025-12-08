@@ -1,268 +1,297 @@
 import React, { useState } from "react";
-import {
-  Mail,
-  Smartphone,
-  User,
-  MapPin,
-  Lock,
-  Eye,
-  EyeOff
-} from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import "../styles/FarmerSignup.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 import { useAuth } from "../context/AuthContext";
-import logo from "../assets/leaflogo.png"; // ✔ IMPORT LOGO
+import logo from "../assets/leaflogo.png";
+import heroImg from "../assets/login_crop.jpg";
+
+const signupTexts = {
+  en: {
+    appName: "Agro Suvidha",
+    welcome: "Namaste!",
+    subtitle: "Create your account to continue",
+    signupTitle: "Sign Up",
+    name: "Full Name",
+    email: "Email",
+    phone: "Phone",
+    password: "Password",
+    confirmPassword: "Confirm Password",
+    enterPassword: "Create a password",
+    enterConfirmPassword: "Re-enter your password",
+    alreadyAccount: "Already have an account?",
+    login: "Login",
+    signup: "Sign Up",
+    loadingText: "Creating account...",
+    errors: {
+      fillAll: "Please fill all fields",
+      invalidPhone: "Phone signup is not implemented. Please use Email.",
+      passwordMismatch: "Passwords do not match.",
+    },
+    genericError: "Failed to create account.",
+  },
+  hi: {
+    appName: "एग्रो सुविधा",
+    welcome: "नमस्ते किसान!",
+    subtitle: "जारी रखने के लिए खाता बनाएं",
+    signupTitle: "साइन अप",
+    name: "पूरा नाम",
+    email: "ईमेल",
+    phone: "फ़ोन",
+    password: "पासवर्ड",
+    confirmPassword: "पासवर्ड की पुष्टि करें",
+    enterPassword: "पासवर्ड बनाएं",
+    enterConfirmPassword: "पासवर्ड दोबारा दर्ज करें",
+    alreadyAccount: "पहले से खाता है?",
+    login: "लॉगिन",
+    signup: "साइन अप",
+    loadingText: "खाता बन रहा है...",
+    errors: {
+      fillAll: "कृपया सभी जानकारी भरें",
+      invalidPhone: "फ़ोन साइन अप अभी उपलब्ध नहीं, कृपया ईमेल उपयोग करें।",
+      passwordMismatch: "पासवर्ड मेल नहीं खाते।",
+    },
+    genericError: "खाता नहीं बन पाया।",
+  },
+  bn: {
+    appName: "এগ্রো সুবিধা",
+    welcome: "নমস্কার কৃষক!",
+    subtitle: "চালিয়ে যেতে অ্যাকাউন্ট তৈরি করুন",
+    signupTitle: "সাইন আপ",
+    name: "পুরো নাম",
+    email: "ইমেল",
+    phone: "ফোন",
+    password: "পাসওয়ার্ড",
+    confirmPassword: "পাসওয়ার্ড নিশ্চিত করুন",
+    enterPassword: "পাসওয়ার্ড তৈরি করুন",
+    enterConfirmPassword: "আবার পাসওয়ার্ড লিখুন",
+    alreadyAccount: "ইতিমধ্যেই অ্যাকাউন্ট আছে?",
+    login: "লগইন",
+    signup: "সাইন আপ",
+    loadingText: "অ্যাকাউন্ট তৈরি হচ্ছে...",
+    errors: {
+      fillAll: "দয়া করে সব ঘর পূরণ করুন",
+      invalidPhone: "ফোন সাইন আপ এখনও নেই, দয়া করে ইমেল ব্যবহার করুন।",
+      passwordMismatch: "পাসওয়ার্ড মিলছে না।",
+    },
+    genericError: "অ্যাকাউন্ট তৈরি করা যায়নি।",
+  },
+  pa: {
+    appName: "ਐਗਰੋ ਸੁਵਿਧਾ",
+    welcome: "ਸਤ ਸ੍ਰੀ ਅਕਾਲ ਕਿਸਾਨ!",
+    subtitle: "ਅੱਗੇ ਵੱਧਣ ਲਈ ਖਾਤਾ ਬਣਾਓ",
+    signupTitle: "ਸਾਇਨ ਅੱਪ",
+    name: "ਪੂਰਾ ਨਾਮ",
+    email: "ਈਮੇਲ",
+    phone: "ਫੋਨ",
+    password: "ਪਾਸਵਰਡ",
+    confirmPassword: "ਪਾਸਵਰਡ ਪੁਸ਼ਟੀ",
+    enterPassword: "ਪਾਸਵਰਡ ਬਣਾਓ",
+    enterConfirmPassword: "ਪਾਸਵਰਡ ਦੁਬਾਰਾ ਦਰਜ ਕਰੋ",
+    alreadyAccount: "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ?",
+    login: "ਲਾਗਿਨ",
+    signup: "ਸਾਇਨ ਅੱਪ",
+    loadingText: "ਖਾਤਾ ਬਣ ਰਿਹਾ ਹੈ...",
+    errors: {
+      fillAll: "ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੇ ਖੇਤਰ ਭਰੋ",
+      invalidPhone: "ਫੋਨ ਸਾਇਨਅੱਪ ਅਜੇ ਨਹੀਂ, ਕਿਰਪਾ ਕਰਕੇ ਈਮੇਲ ਵਰਤੋ।",
+      passwordMismatch: "ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ।",
+    },
+    genericError: "ਖਾਤਾ ਨਹੀਂ ਬਣ ਸਕਿਆ।",
+  },
+};
 
 function FarmerSignup() {
-  const [signupType, setSignupType] = useState("email");
-  const [showPass, setShowPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
-  const [acceptTerms, setAcceptTerms] = useState(false);
   const navigate = useNavigate();
-  const { signup, setPersistenceForRemember } = useAuth();
+  const { language } = useLanguage();
+  const { signup } = useAuth();
+  const text = signupTexts[language] || signupTexts.en;
 
+  const [isEmail, setIsEmail] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
-    fullName: "",
+    name: "",
     emailOrPhone: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
   const handleInput = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  const handleSignup = async (e) => {
+    if (e) e.preventDefault();
+    setError("");
+
+    if (!form.name || !form.emailOrPhone || !form.password || !form.confirmPassword) {
+      setError(text.errors.fillAll);
+      return;
+    }
+
+    if (!isEmail) {
+      setError(text.errors.invalidPhone);
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      setError(text.errors.passwordMismatch);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await signup(form.emailOrPhone, form.password, form.name);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Signup error:", err);
+      const message = err?.message ? err.message : text.genericError;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="signup-page farmer-bg">
-      {/* HEADER */}
-      <div className="signup-header">
-        <div className="signup-logo-wrap">
+    <div className="Farmsign-container">
 
-          {/* ✔ USE LOGO */}
-          <div className="signup-logo-image-wrapper">
-            <img src={logo} alt="Agro Suvidha Logo" className="signup-app-logo" />
-          </div>
-
-          <h2 className="signup-app-title farmer-text">Agro Suvidha</h2>
+      <div className="farmsign-header">
+        <div className="farmsign-logo">
+          <img src={logo} alt="logo" />
+          <h1>{text.appName}</h1>
         </div>
-
-        <span className="signup-badge farmer-badge">
-          Farmer Registration
-        </span>
       </div>
 
-      {/* CONTENT */}
-      <div className="signup-body">
-        <div className="signup-container">
-
-          {/* HERO IMAGE */}
-          <div className="signup-hero-card">
-            <img
-              src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=1080&q=80"
-              className="signup-hero-img"
-              alt="Farmer"
-            />
-            <div className="signup-hero-overlay farmer-overlay"></div>
-            <div className="signup-hero-text">
-              <h1>Create New Account</h1>
-              <p>Farmer Registration</p>
-            </div>
+      <div className="farmsign-hero">
+        <img src={heroImg} alt="Smart Farming" />
+        <div className="farmsign-hero-overlay">
+          <div>
+            <h1>{text.welcome}</h1>
+            <p>{text.subtitle}</p>
           </div>
+        </div>
+      </div>
 
-          {/* SIGNUP CARD */}
-          <div className="signup-card farmer-border">
+      <form className="farmsign-card" onSubmit={handleSignup}>
+        <div className="farmsign-toggle-buttons">
+          <button
+            type="button"
+            className={isEmail ? "active" : ""}
+            onClick={() => setIsEmail(true)}
+          >
+            {text.email}
+          </button>
 
-            <h3 className="signup-title farmer-text">Sign Up</h3>
+          <button
+            type="button"
+            className={!isEmail ? "active" : ""}
+            onClick={() => setIsEmail(false)}
+          >
+            {text.phone}
+          </button>
+        </div>
 
-            {/* SIGNUP TYPE TOGGLE */}
-            <div className="signup-toggle-box">
-              <button
-                onClick={() => setSignupType("email")}
-                className={`signup-toggle-btn ${signupType === "email" ? "farmer-active" : ""}`}
-              >
-                <Mail className="signup-toggle-icon" />
-                Email Address
-              </button>
+        <h3>{text.signupTitle}</h3>
 
-              <button
-                onClick={() => setSignupType("phone")}
-                className={`signup-toggle-btn ${signupType === "phone" ? "farmer-active" : ""}`}
-              >
-                <Smartphone className="signup-toggle-icon" />
-                Phone Number
-              </button>
-            </div>
+        {error && <div className="farmsign-error">{error}</div>}
 
-            {/* NAME */}
-            <div className="signup-field">
-              <label>Full Name</label>
-              <div className="signup-field-wrap">
-                <User className="signup-field-icon" />
-                <input
-                  type="text"
-                  name="fullName"
-                  placeholder="Enter your full name"
-                  value={form.fullName}
-                  onChange={handleInput}
-                  required
-                />
-              </div>
-            </div>
+        <div className="farmsign-form-group">
+          <label>{text.name}</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Farmer Name"
+            value={form.name}
+            onChange={handleInput}
+            required
+          />
+        </div>
 
-            {/* EMAIL / PHONE */}
-            <div className="signup-field">
-              <label>{signupType === "email" ? "Email Address" : "Phone Number"}</label>
-              <div className="signup-field-wrap">
-                {signupType === "email" ? (
-                  <Mail className="signup-field-icon" />
-                ) : (
-                  <Smartphone className="signup-field-icon" />
-                )}
-                <input
-                  type={signupType === "email" ? "email" : "tel"}
-                  name="emailOrPhone"
-                  placeholder={signupType === "email" ? "farmer@example.com" : "+91 98765 43210"}
-                  value={form.emailOrPhone}
-                  onChange={handleInput}
-                  required
-                />
-              </div>
-            </div>
+        <div className="farmsign-form-group">
+          <label>{isEmail ? text.email : text.phone}</label>
+          <input
+            type={isEmail ? "email" : "tel"}
+            name="emailOrPhone"
+            placeholder={isEmail ? "farmer@example.com" : "+91 98765 43210"}
+            value={form.emailOrPhone}
+            onChange={handleInput}
+            required
+          />
+        </div>
 
-            {/* PASSWORD */}
-            <div className="signup-field">
-              <label>Password</label>
-              <div className="signup-field-wrap">
-                <Lock className="signup-field-icon" />
-                <input
-                  type={showPass ? "text" : "password"}
-                  name="password"
-                  placeholder="Create a password"
-                  value={form.password}
-                  onChange={handleInput}
-                />
-                <button
-                  type="button"
-                  className="signup-eye-btn"
-                  onClick={() => setShowPass(!showPass)}
-                >
-                  {showPass ? <EyeOff /> : <Eye />}
-                </button>
-              </div>
-            </div>
-
-            {/* CONFIRM PASSWORD */}
-            <div className="signup-field">
-              <label>Confirm Password</label>
-              <div className="signup-field-wrap">
-                <Lock className="signup-field-icon" />
-                <input
-                  type={showConfirmPass ? "text" : "password"}
-                  name="confirmPassword"
-                  placeholder="Confirm your password"
-                  value={form.confirmPassword}
-                  onChange={handleInput}
-                />
-                <button
-                  type="button"
-                  className="signup-eye-btn"
-                  onClick={() => setShowConfirmPass(!showConfirmPass)}
-                >
-                  {showConfirmPass ? <EyeOff /> : <Eye />}
-                </button>
-              </div>
-            </div>
-
-            {/* TERMS */}
-            <div className="signup-terms-row">
-              <input
-                type="checkbox"
-                onChange={(e) => setAcceptTerms(e.target.checked)}
-              />
-              <label>I accept the terms and conditions</label>
-            </div>
-
-            {/* show error */}
-            {error && <div className="signup-error">{error}</div>}
-
-            {/* SIGNUP */}
+        <div className="farmsign-form-group">
+          <label>{text.password}</label>
+          <div className="farmsign-password-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder={text.enterPassword}
+              value={form.password}
+              onChange={handleInput}
+              required
+            />
             <button
               type="button"
-              onClick={async (e) => {
-                e.preventDefault();
-                setError("");
-
-                // basic validation
-                if (!acceptTerms) {
-                  setError("Please accept the terms and conditions.");
-                  return;
-                }
-
-                if (signupType !== "email") {
-                  setError("Phone signup is not implemented. Please use Email.");
-                  return;
-                }
-
-                if (!form.fullName || !form.emailOrPhone || !form.password || !form.confirmPassword) {
-                  setError("Please fill all fields.");
-                  return;
-                }
-
-                if (form.password !== form.confirmPassword) {
-                  setError("Passwords do not match.");
-                  return;
-                }
-
-                setLoading(true);
-                try {
-                  try {
-                    await setPersistenceForRemember(true);
-                  } catch (persErr) {
-                    console.warn("Could not set persistence:", persErr);
-                  }
-
-                  const cred = await signup(form.emailOrPhone, form.password, form.fullName);
-                  // on success navigate
-                  navigate("/dashboard");
-                } catch (err) {
-                  console.error("Signup error:", err);
-                  let msg = "Failed to create account.";
-                  if (err?.code === "auth/email-already-in-use") msg = "Email already in use.";
-                  else if (err?.code === "auth/weak-password") msg = "Password is too weak.";
-                  else if (err?.message) msg = err.message;
-                  setError(msg);
-                } finally {
-                  setLoading(false);
-                }
-              }}
-              disabled={!acceptTerms || loading}
-              className={`signup-btn farmer-btn ${!acceptTerms ? "disabled" : ""}`}
+              onClick={() => setShowPassword(!showPassword)}
+              className="password-toggle-btn"
             >
-              <User className="signup-btn-icon" />
-              {loading ? "Creating account..." : "Sign Up"}
+              {showPassword ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              )}
             </button>
-
-            {/* FORGOT PASSWORD LINK */}
-            <div className="signup-forgot-password-row">
-              <Link to="/forgot-password" className="farmer-forgot-link">Forgot Password?</Link>
-            </div>
-
-            {/* FORGOT PASSWORD LINK */}
-            <div className="signup-forgot-password-row">
-              <Link to="/forgot-password" className="officer-forgot-link">Forgot Password?</Link>
-            </div>
-
-            {/* SIGN IN LINK */}
-            <div className="officersignup-signin-row">
-              <span>Already have an account?</span>
-              <Link to="/loginofficer" className="officer-link">Sign In</Link>
-            </div>
-
           </div>
         </div>
-      </div>
+
+        <div className="farmsign-form-group">
+          <label>{text.confirmPassword}</label>
+          <div className="farmsign-password-wrapper">
+            <input
+              type={showConfirm ? "text" : "password"}
+              name="confirmPassword"
+              placeholder={text.enterConfirmPassword}
+              value={form.confirmPassword}
+              onChange={handleInput}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirm(!showConfirm)}
+              className="password-toggle-btn"
+            >
+              {showConfirm ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+
+        <button className="farmsign-btn" disabled={loading} type="submit">
+          {loading ? text.loadingText : text.signup}
+        </button>
+
+        <div className="farmsign-signup">
+          <span>{text.alreadyAccount}</span>
+          <Link to="/login">{text.login}</Link>
+        </div>
+      </form>
     </div>
   );
 }

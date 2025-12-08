@@ -1,227 +1,204 @@
 import React, { useState } from "react";
 import { auth } from "../../firebase/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import {
-  Mail,
-  Smartphone,
-  User,
-  MapPin,
-  Lock,
-  Eye,
-  EyeOff
-} from "lucide-react";
 import "../styles/FieldOfficerSignup.css";
 import { Link } from "react-router-dom";
 import logo from "../assets/bluelogo.png";
+import heroImg from "../assets/login_crop.jpg";
 
 function FieldOfficerSignup() {
-  const [signupType, setSignupType] = useState("email");
-  const [showPass, setShowPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
-  const [acceptTerms, setAcceptTerms] = useState(false);
-
-  // Form fields
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isEmail, setIsEmail] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Handle signup
+  const [form, setForm] = useState({
+    fullName: "",
+    emailOrPhone: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleInput = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-    if (signupType !== "email") {
+
+    if (!form.fullName || !form.emailOrPhone || !form.password || !form.confirmPassword) {
+      setError("Please fill all fields.");
+      return;
+    }
+
+    if (!isEmail) {
       setError("Only email signup is supported currently.");
       return;
     }
-    if (!fullName || !email || !password || !confirmPassword) {
-      setError("Please fill in all fields.");
-      return;
-    }
-    if (password !== confirmPassword) {
+
+    if (form.password !== form.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
+
+    setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, form.emailOrPhone, form.password);
       setSuccess("Signup successful! You can now log in.");
+      setForm({
+        fullName: "",
+        emailOrPhone: "",
+        password: "",
+        confirmPassword: "",
+      });
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="officersignup-page officer-bg">
-      {/* HEADER */}
+    <div className="officersignup-container">
       <div className="officersignup-header">
-        <div className="officersignup-logo-wrap">
-
-          {/* LOGO */}
-          <div className="officersignup-logo-image-wrapper">
-            <img src={logo} alt="Agro Suvidha Logo" className="officersignup-app-logo" />
-          </div>
-
-          <h2 className="officersignup-app-title officer-text">Agro Suvidha</h2>
+        <div className="officersignup-logo">
+          <img src={logo} alt="logo" />
+          <h1>Agro Suvidha</h1>
         </div>
-
-        <span className="officersignup-badge officer-badge">
-          Field Officer Registration
-        </span>
       </div>
 
-      {/* CONTENT */}
-      <div className="officersignup-body">
-        <div className="officersignup-container">
-
-          {/* HERO IMAGE */}
-          <div className="officersignup-hero-card">
-            <div className="officersignup-hero-overlay officer-overlay"></div>
-            <div className="officersignup-hero-text">
-              <h1>Create New Account</h1>
-              <p>Field Officer Registration</p>
-            </div>
+      <div className="officersignup-hero">
+        <img src={heroImg} alt="Smart Farming" />
+        <div className="officersignup-hero-overlay">
+          <div>
+            <h1>Namaste!</h1>
+            <p>Create your account to continue</p>
           </div>
+        </div>
+      </div>
 
-          {/* SIGNUP CARD */}
-          <div className="officersignup-card officer-border">
+      <form className="officersignup-card" onSubmit={handleSignup}>
+        <div className="officersignup-toggle-buttons">
+          <button
+            type="button"
+            className={isEmail ? "active" : ""}
+            onClick={() => setIsEmail(true)}
+          >
+            Email
+          </button>
 
-            <h3 className="officersignup-title officer-text">Sign Up</h3>
+          <button
+            type="button"
+            className={!isEmail ? "active" : ""}
+            onClick={() => setIsEmail(false)}
+          >
+            Phone
+          </button>
+        </div>
 
-            {/* SIGNUP TYPE TOGGLE */}
-            <div className="officersignup-toggle-box">
-              <button
-                onClick={() => setSignupType("email")}
-                className={`officersignup-toggle-btn ${signupType === "email" ? "officer-active" : ""}`}
-              >
-                <Mail className="officersignup-toggle-icon" />
-                Email Address
-              </button>
+        <h3>Sign Up</h3>
 
-              <button
-                onClick={() => setSignupType("phone")}
-                className={`officersignup-toggle-btn ${signupType === "phone" ? "officer-active" : ""}`}
-              >
-                <Smartphone className="officersignup-toggle-icon" />
-                Phone Number
-              </button>
-            </div>
+        {error && <div className="officersignup-error">{error}</div>}
+        {success && <div className="officersignup-success">{success}</div>}
 
-            {/* NAME */}
-            <div className="officersignup-field">
-              <label>Full Name</label>
-              <div className="officersignup-field-wrap">
-                <User className="officersignup-field-icon" />
-                <input
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                />
-              </div>
-            </div>
+        <div className="officersignup-form-group">
+          <label>Full Name</label>
+          <input
+            type="text"
+            name="fullName"
+            placeholder="Enter your full name"
+            value={form.fullName}
+            onChange={handleInput}
+            required
+          />
+        </div>
 
-            {/* EMAIL / PHONE */}
-            <div className="officersignup-field">
-              <label>{signupType === "email" ? "Email Address" : "Phone Number"}</label>
-              <div className="officersignup-field-wrap">
-                {signupType === "email" ? (
-                  <Mail className="officersignup-field-icon" />
-                ) : (
-                  <Smartphone className="officersignup-field-icon" />
-                )}
-                <input
-                  type={signupType === "email" ? "email" : "tel"}
-                  placeholder={signupType === "email" ? "officer@example.com" : "+91 98765 43210"}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={signupType !== "email"}
-                />
-              </div>
-            </div>
+        <div className="officersignup-form-group">
+          <label>{isEmail ? "Email Address" : "Phone Number"}</label>
+          <input
+            type={isEmail ? "email" : "tel"}
+            name="emailOrPhone"
+            placeholder={isEmail ? "officer@example.com" : "+91 98765 43210"}
+            value={form.emailOrPhone}
+            onChange={handleInput}
+            required
+          />
+        </div>
 
-            {/* PASSWORD */}
-            <div className="officersignup-field">
-              <label>Password</label>
-              <div className="officersignup-field-wrap">
-                <Lock className="officersignup-field-icon" />
-                <input
-                  type={showPass ? "text" : "password"}
-                  placeholder="Create a password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="officersignup-eye-btn"
-                  onClick={() => setShowPass(!showPass)}
-                >
-                  {showPass ? <EyeOff /> : <Eye />}
-                </button>
-              </div>
-            </div>
-
-            {/* CONFIRM PASSWORD */}
-            <div className="officersignup-field">
-              <label>Confirm Password</label>
-              <div className="officersignup-field-wrap">
-                <Lock className="officersignup-field-icon" />
-                <input
-                  type={showConfirmPass ? "text" : "password"}
-                  placeholder="Confirm your password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="officersignup-eye-btn"
-                  onClick={() => setShowConfirmPass(!showConfirmPass)}
-                >
-                  {showConfirmPass ? <EyeOff /> : <Eye />}
-                </button>
-              </div>
-            </div>
-
-            {/* TERMS */}
-            <div className="officersignup-terms-row">
-              <input
-                type="checkbox"
-                onChange={(e) => setAcceptTerms(e.target.checked)}
-              />
-              <label>I accept the terms and conditions</label>
-            </div>
-
-            {/* SIGNUP BUTTON */}
-
-            {/* Error/Success Message */}
-            {error && <div className="officersignup-error">{error}</div>}
-            {success && <div className="officersignup-success">{success}</div>}
-
+        <div className="officersignup-form-group">
+          <label>Password</label>
+          <div className="officersignup-password-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Create a password"
+              value={form.password}
+              onChange={handleInput}
+              required
+            />
             <button
-              disabled={!acceptTerms}
-              className={`officersignup-btn officer-btn ${!acceptTerms ? "disabled" : ""}`}
-              onClick={handleSignup}
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="password-toggle-btn"
             >
-              <User className="officersignup-btn-icon" />
-              Sign Up
+              {showPassword ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              )}
             </button>
-
-            {/* FORGOT PASSWORD LINK */}
-            <div className="officersignup-forgot-password-row">
-              <Link to="/forgot-password" className="officer-forgot-link">Forgot Password?</Link>
-            </div>
-
-            {/* SIGN IN LINK */}
-            <div className="officersignup-signin-row">
-              <span>Already have an account?</span>
-              <Link to="/loginofficer" className="officer-link">Sign In</Link>
-            </div>
-
           </div>
         </div>
-      </div>
+
+        <div className="officersignup-form-group">
+          <label>Confirm Password</label>
+          <div className="officersignup-password-wrapper">
+            <input
+              type={showConfirm ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              value={form.confirmPassword}
+              onChange={handleInput}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirm(!showConfirm)}
+              className="password-toggle-btn"
+            >
+              {showConfirm ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+
+        <button className="officersignup-btn" disabled={loading} type="submit">
+          {loading ? "Creating account..." : "Sign Up"}
+        </button>
+
+        <div className="officersignup-signin">
+          <span>Already have an account?</span>
+          <Link to="/loginofficer">Sign In</Link>
+        </div>
+      </form>
     </div>
   );
 }
