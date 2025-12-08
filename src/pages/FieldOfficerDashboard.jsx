@@ -28,6 +28,9 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/Weather.css";
 import { useLanguage } from "../context/LanguageContext";
+import { useAuth } from "../context/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
 
 const ENV_KEY = import.meta.env.VITE_WEATHERAPI_KEY || "";
 
@@ -348,6 +351,25 @@ export default function Home() {
   const navigate = useNavigate();
   const location = useLocation();
   const effectiveKey = ENV_KEY;
+  const [officerProfile, setOfficerProfile] = useState(() => {
+    try {
+      const keys = ["farmerProfile", "userProfile", "agroUser"];
+      for (const k of keys) {
+        const raw = localStorage.getItem(k);
+        if (raw) {
+          try {
+            const parsed = JSON.parse(raw);
+            if (parsed && (parsed.fullName || parsed.email)) return parsed;
+          } catch {}
+        }
+      }
+      const name = localStorage.getItem("displayName") || localStorage.getItem("userName") || "Officer";
+      const email = localStorage.getItem("userEmail") || "";
+      return { fullName: name, email };
+    } catch {
+      return { fullName: "Officer", email: "" };
+    }
+  });
 
   const requestLocation = useCallback(() => {
     if (!navigator.geolocation) {
@@ -418,6 +440,67 @@ export default function Home() {
   useEffect(() => {
     requestLocation();
   }, [requestLocation]);
+
+  useEffect(() => {
+    const handle = (e) => {
+      const p = e?.detail || officerProfile;
+      setOfficerProfile(p);
+    };
+    window.addEventListener("agroProfileUpdated", handle);
+    return () => window.removeEventListener("agroProfileUpdated", handle);
+  }, []);
+
+  const { currentUser, logout } = useAuth();
+
+  const navigateToProfile = async () => {
+    try {
+      let role = officerProfile?.role || (() => {
+        const raw = localStorage.getItem("userProfile") || localStorage.getItem("farmerProfile");
+        if (!raw) return null;
+        try {
+          const parsed = JSON.parse(raw);
+          return parsed?.role || null;
+        } catch {
+          return null;
+        }
+      })();
+
+      if (!role && currentUser && currentUser.uid) {
+        try {
+          const snap = await getDoc(doc(db, "users", currentUser.uid));
+          if (snap && snap.exists()) {
+            const data = snap.data();
+            if (data?.role) role = data.role;
+
+            const stored = {
+              fullName: data?.displayName || localStorage.getItem("displayName") || currentUser.displayName || "Officer",
+              email: data?.email || currentUser.email || "",
+              role: role || null,
+            };
+            try {
+              localStorage.setItem("userProfile", JSON.stringify(stored));
+              localStorage.setItem("farmerProfile", JSON.stringify(stored));
+              localStorage.setItem("agroUser", JSON.stringify(stored));
+              localStorage.setItem("displayName", stored.fullName);
+              localStorage.setItem("userName", stored.fullName);
+              localStorage.setItem("userEmail", stored.email || "");
+              window.dispatchEvent(new CustomEvent("agroProfileUpdated", { detail: stored }));
+            } catch (e) {}
+          }
+        } catch (e) {
+          console.warn("Could not fetch user role:", e);
+        }
+      }
+
+      if (role === "field_officer" || role === "officer") {
+        navigate("/field-officer-profile");
+      } else {
+        navigate("/farmer-profile");
+      }
+    } catch (e) {
+      navigate("/field-officer-profile");
+    }
+  };
 
   useEffect(() => {
     if (coords) fetchWeather();
@@ -513,9 +596,18 @@ export default function Home() {
   });
 
   const handleLogout = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    navigate("/loginofficer");
+    (async () => {
+      try {
+        await logout();
+      } catch (e) {
+        console.warn("Logout failed:", e);
+      }
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (e) {}
+      navigate("/");
+    })();
   };
 
   const isActive = (path) =>
@@ -777,12 +869,11 @@ export default function Home() {
             </div>
 
             <div className="profile-card">
-              <div className="profile-avatar">R</div>
+              <div className="profile-avatar">{(officerProfile?.fullName || "O").charAt(0).toUpperCase()}</div>
               <div className="profile-info">
-                <h3>Ram Kumar</h3>
+                <h3>{officerProfile?.fullName || "Officer"}</h3>
                 <p>
-                  <MapPin style={{ width: 12, height: 12 }} /> Siliguri, West
-                  Bengal
+                  <MapPin style={{ width: 12, height: 12 }} /> {locationMsg || (officerProfile?.location || "Unknown")}
                 </p>
                 <p>{text.profile}</p>
               </div>
@@ -790,7 +881,7 @@ export default function Home() {
             </div>
 
             <div className="menu">
-              <button onClick={() => navigate("/profile")}>
+              <button onClick={navigateToProfile}>
                 <div className="menu-icon">
                   <User />
                 </div>

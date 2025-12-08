@@ -148,7 +148,27 @@ function Login() {
         console.warn("Could not set persistence:", persistErr);
       }
 
-      await login(form.emailOrPhone, form.password);
+      const cred = await login(form.emailOrPhone, form.password);
+
+      // Persist farmer profile with role flag for routing
+      try {
+        const user = cred && cred.user ? cred.user : null;
+        const stored = {
+          fullName: (user && (user.displayName || localStorage.getItem("displayName"))) || "Farmer",
+          email: (user && user.email) || form.emailOrPhone,
+          role: "farmer",
+        };
+        localStorage.setItem("userProfile", JSON.stringify(stored));
+        localStorage.setItem("farmerProfile", JSON.stringify(stored));
+        localStorage.setItem("agroUser", JSON.stringify(stored));
+        localStorage.setItem("displayName", stored.fullName);
+        localStorage.setItem("userName", stored.fullName);
+        localStorage.setItem("userEmail", stored.email || "");
+        window.dispatchEvent(new CustomEvent("agroProfileUpdated", { detail: stored }));
+      } catch (e) {
+        console.warn("Could not persist farmer profile to localStorage:", e);
+      }
+
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);

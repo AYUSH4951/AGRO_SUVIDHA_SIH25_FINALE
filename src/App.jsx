@@ -1,6 +1,6 @@
 // src/App.jsx
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import GoogleTranslate from "./GoogleTranslate";
 import { LanguageProvider } from "./context/LanguageContext";
@@ -10,12 +10,15 @@ import ProtectedRoute from "../components/ProtectedRoute";
 
 import Home from "./pages/Home";
 import LanguageSelect from "./pages/LanguageSelect";
+import GetStarted from "./pages/GetStarted";
 import Login from "./pages/Login";
 import LoginOfficer from "./pages/LoginOfficer";
 import RoleSelect from "./pages/RoleSelect";
 import FarmerSignup from "./pages/FarmerSignup";
 import FieldOfficerSignup from "./pages/FieldOfficerSignup";
 import MainDashboard from "./pages/MainDashboard";
+import FarmerProfile from "./pages/FarmerProfile";
+import FieldOfficerProfile from "./pages/FieldOfficerProfile";
 import CropManager from "./pages/CropManager";
 import AboutUs from "./pages/AboutUs";
 import Forecast from "./pages/Forecast";
@@ -28,10 +31,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import FieldOfficerDashboard from "./pages/FieldOfficerDashboard";
 import ImageScanner from "./pages/ImageScanner";
 import CombinedResult from "./pages/CombinedResult";
-import Profile from "./pages/FarmerProfile";
-import Settings_language from "./pages/Settings_language";
-import Privacy from "./pages/Privacy";
-import Help from "./pages/Help";
+
 function App() {
   return (
     <LanguageProvider>
@@ -54,19 +54,7 @@ function App() {
             <Route path="/about" element={<AboutUs />} />
             <Route path="/weather" element={<Forecast />} />
             <Route path="/mandi" element={<MandiPrice />} />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/setlanguage" element={<Settings_language />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/help" element={<Help />} />
-            <Route path="/get-started" element={<Navigate to="/role-select" replace />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/get-started" element={<GetStarted />} />
 
             {/* Farmer protected routes */}
             <Route
@@ -110,7 +98,25 @@ function App() {
               }
             />
 
-            {/* Field officer protected routes 
+            {/* Farmer profile */}
+            <Route
+              path="/farmer-profile"
+              element={
+                <ProtectedRoute>
+                  <FarmerProfile />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Field officer protected routes */}
+            <Route
+              path="/field-officer-profile"
+              element={
+                <ProtectedRoute>
+                  <FieldOfficerProfile />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/field-officer/dashboard"
               element={
@@ -118,7 +124,7 @@ function App() {
                   <FieldOfficerDashboard />
                 </ProtectedRoute>
               }
-            />*/}
+            />
             <Route
               path="/scan"
               element={

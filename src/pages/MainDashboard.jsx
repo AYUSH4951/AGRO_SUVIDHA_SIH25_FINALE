@@ -28,6 +28,9 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/Weather.css";
 import { useLanguage } from "../context/LanguageContext";
+import { useAuth } from "../context/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
 
 const ENV_KEY = import.meta.env.VITE_WEATHERAPI_KEY || "";
 
@@ -239,7 +242,7 @@ const dashboardTexts = {
     pestTitle: "পোকার শনাক্তকরণ ও সমাধান",
     pestSub: "ফসলের রোগ শনাক্ত করুন এবং চিকিৎসা জানুন।",
     pestCta: "পোকার শনাক্তকরণ খুলুন",
-    mandiTitle: "মंडी দামের তথ্য",
+    mandiTitle: "মণ্ডি দামের তথ্য",
     mandiSub: "আপনার ফসলের লাইভ বাজারদর দেখুন।",
     mandiCta: "বাজারদর দেখুন",
     soilTitle: "মাটির আর্দ্রতা",
@@ -315,7 +318,7 @@ const dashboardTexts = {
     pestCta: "ਕੀਟ ਪਹਿਚਾਣ ਖੋਲ੍ਹੋ",
     mandiTitle: "ਮੰਡੀ ਭਾਅ",
     mandiSub: "ਆਪਣੀ ਫਸਲਾਂ ਦੇ ਲਾਈਵ ਮੰਡੀ ਭਾਅ ਵੇਖੋ।",
-    mandiCta: "ਮੰਡੀ ਭਾਅ ਵੇਖੋ",
+    mandiCta: "ਮੰਡੀ भਾਅ ਵੇਖੋ",
     soilTitle: "ਮਿੱਟੀ ਦੀ ਨਮੀ",
     soilSub: "ਮਿੱਟੀ ਦੀ ਨਮੀ ਵੇਖੋ ਅਤੇ ਸਿੰਚਾਈ ਸਲਾਹ ਲਵੋ।",
     soilCta: "ਮਿੱਟੀ ਦੀ ਸਥਿਤੀ ਵੇਖੋ",
@@ -344,10 +347,93 @@ export default function Home() {
   const [loadingWeather, setLoadingWeather] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [farmerProfile, setFarmerProfile] = useState(() => {
+    try {
+      const keys = ["farmerProfile", "userProfile", "agroUser"];
+      for (const k of keys) {
+        const raw = localStorage.getItem(k);
+        if (raw) {
+          try {
+            const parsed = JSON.parse(raw);
+            if (parsed && (parsed.fullName || parsed.email)) return parsed;
+          } catch {}
+        }
+      }
+      const name =
+        localStorage.getItem("displayName") ||
+        localStorage.getItem("userName") ||
+        "Farmer";
+      const email = localStorage.getItem("userEmail") || "";
+      return { fullName: name, email };
+    } catch {
+      return { fullName: "Farmer", email: "" };
+    }
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useAuth();
   const effectiveKey = ENV_KEY;
+
+  // Navigate to the correct profile page depending on role stored in profile/localStorage
+  const { currentUser } = useAuth();
+
+  const navigateToProfile = async () => {
+    try {
+      let role =
+        farmerProfile?.role ||
+        (() => {
+          const raw = localStorage.getItem("userProfile") || localStorage.getItem("farmerProfile");
+          if (!raw) return null;
+          try {
+            const parsed = JSON.parse(raw);
+            return parsed?.role || null;
+          } catch {
+            return null;
+          }
+        })();
+
+      // If role is not present, try to fetch from Firestore user doc (if available)
+      if (!role && currentUser && currentUser.uid) {
+        try {
+          const snap = await getDoc(doc(db, "users", currentUser.uid));
+          if (snap && snap.exists()) {
+            const data = snap.data();
+            if (data?.role) role = data.role;
+
+            // persist a lightweight profile for UI routing
+            const stored = {
+              fullName: data?.displayName || localStorage.getItem("displayName") || currentUser.displayName || "User",
+              email: data?.email || currentUser.email || "",
+              role: role || null,
+            };
+            try {
+              localStorage.setItem("userProfile", JSON.stringify(stored));
+              localStorage.setItem("farmerProfile", JSON.stringify(stored));
+              localStorage.setItem("agroUser", JSON.stringify(stored));
+              localStorage.setItem("displayName", stored.fullName);
+              localStorage.setItem("userName", stored.fullName);
+              localStorage.setItem("userEmail", stored.email || "");
+              window.dispatchEvent(new CustomEvent("agroProfileUpdated", { detail: stored }));
+            } catch (e) {
+              // ignore storage errors
+            }
+          }
+        } catch (e) {
+          // ignore firestore errors
+          console.warn("Could not fetch user role:", e);
+        }
+      }
+
+      if (role === "field_officer" || role === "officer") {
+        navigate("/field-officer-profile");
+      } else {
+        navigate("/farmer-profile");
+      }
+    } catch (e) {
+      navigate("/farmer-profile");
+    }
+  };
 
   const requestLocation = useCallback(() => {
     if (!navigator.geolocation) {
@@ -441,6 +527,16 @@ export default function Home() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  useEffect(() => {
+    // listen for profile updates from other components
+    const handle = (e) => {
+      const p = e?.detail || farmerProfile;
+      setFarmerProfile(p);
+    };
+    window.addEventListener("agroProfileUpdated", handle);
+    return () => window.removeEventListener("agroProfileUpdated", handle);
+  }, []);
+
   const isLoading = loadingLocation || loadingWeather;
 
   const tempC = weather?.current?.temp_c ?? null;
@@ -513,9 +609,23 @@ export default function Home() {
   });
 
   const handleLogout = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    navigate("/login");
+    // perform firebase logout, then clear local/session storage and navigate
+    (async () => {
+      try {
+        await logout();
+      } catch (e) {
+        // ignore logout errors but proceed to clear storage
+        console.warn("Logout failed:", e);
+      }
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (e) {
+        // ignore storage errors
+      }
+      // After logout, send users to the Home page
+      navigate("/");
+    })();
   };
 
   const isActive = (path) =>
@@ -782,12 +892,14 @@ export default function Home() {
             </div>
 
             <div className="profile-card">
-              <div className="profile-avatar">R</div>
+              <div className="profile-avatar">
+                {(farmerProfile.fullName || "F").charAt(0).toUpperCase()
+                }
+              </div>
               <div className="profile-info">
-                <h3>Ram Kumar</h3>
+                <h3>{farmerProfile.fullName || "Farmer"}</h3>
                 <p>
-                  <MapPin style={{ width: 12, height: 12 }} /> Siliguri, West
-                  Bengal
+                  <MapPin style={{ width: 12, height: 12 }} /> {locationMsg || (farmerProfile.location || "Unknown")}
                 </p>
                 <p>{text.profile}</p>
               </div>
@@ -795,7 +907,7 @@ export default function Home() {
             </div>
 
             <div className="menu">
-              <button onClick={() => navigate("/profile")}>
+              <button onClick={navigateToProfile}>
                 <div className="menu-icon">
                   <User />
                 </div>
@@ -806,7 +918,7 @@ export default function Home() {
                 <ChevronRight className="chevron" />
               </button>
 
-              <button onClick={() => navigate("/setlanguage")}>
+              <button>
                 <div className="menu-icon">
                   <Globe />
                 </div>
@@ -817,7 +929,7 @@ export default function Home() {
                 <ChevronRight className="chevron" />
               </button>
 
-              <button onClick={() => navigate("/Privacy")}>
+              <button>
                 <div className="menu-icon">
                   <Shield />
                 </div>
@@ -828,7 +940,7 @@ export default function Home() {
                 <ChevronRight className="chevron" />
               </button>
 
-              <button onClick={() => navigate("/help")}>
+              <button>
                 <div className="menu-icon">
                   <HelpCircle />
                 </div>
@@ -948,4 +1060,4 @@ export default function Home() {
       </div>
     </>
   );
-}   
+}

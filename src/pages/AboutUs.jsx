@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { HomeIcon, Sprout, Sun, Settings, Globe } from "lucide-react";
 import "../styles/Weather.css";
 import "../styles/AboutUs.css";
 import { useLanguage } from "../context/LanguageContext";
 
-// ✅ FIXED: Correct aboutTexts object (no self-reference)
 const aboutTexts = {
   en: {
     brandTitle: "AgroSubhidha",
@@ -30,10 +29,9 @@ const aboutTexts = {
     feedbackButton: "Submit Feedback",
     footer: "Made or Created by Team BLACK SYNTEX",
   },
-
   hi: {
     brandTitle: "एग्रो सुविधा",
-    brandSubtitle: "किसानों का डिजिटल साथी",
+    brandSubtitle: "किसान का डिजिटल साथी",
     navHome: "होम",
     navCrops: "फसलें",
     navWeather: "मौसम",
@@ -42,22 +40,21 @@ const aboutTexts = {
     navAbout: "हमारे बारे में",
     title: "हमारे बारे में",
     description:
-      "फार्म मैनेजर एक स्मार्ट कृषि प्लेटफ़ॉर्म है जो किसानों को मौसम, फसलों और दैनिक कार्यों में सहायता करता है।",
+      "फार्म मैनेजर में आपका स्वागत है, स्मार्ट खेती के लिए आपका विश्वसनीय साथी। हमारा प्लेटफॉर्म किसानों को मौसम की निगरानी, फसल प्रबंधन, कार्यों की ट्रैकिंग और उत्पादकता बढ़ाने के लिए बेहतर निर्णय लेने में मदद करता है।",
     mission:
-      "हमारा मिशन किसानों को आधुनिक तकनीक और सटीक जानकारी देकर खेती को आसान और टिकाऊ बनाना है।",
+      "हमारा लक्ष्य किसानों को आधुनिक टूल, सटीक जानकारी और तकनीक आधारित समाधानों से सशक्त बनाना है, जिससे खेती आसान और अधिक टिकाऊ बन सके।",
     contactTitle: "संपर्क करें",
     phone: "+91 98765 43210",
     email: "farmmanager@gmail.com",
     location: "सिलीगुड़ी, भारत",
     feedbackTitle: "प्रतिक्रिया",
     feedbackPlaceholder: "अपनी प्रतिक्रिया यहाँ लिखें...",
-    feedbackButton: "सबमिट करें",
+    feedbackButton: "प्रतिक्रिया भेजें",
     footer: "टीम BLACK SYNTEX द्वारा बनाया गया",
   },
-
   bn: {
     brandTitle: "এগ্রো সুবিধা",
-    brandSubtitle: "কৃষকদের ডিজিটাল সহকারী",
+    brandSubtitle: "কৃষকের ডিজিটাল সঙ্গী",
     navHome: "হোম",
     navCrops: "ফসল",
     navWeather: "আবহাওয়া",
@@ -66,23 +63,22 @@ const aboutTexts = {
     navAbout: "আমাদের সম্পর্কে",
     title: "আমাদের সম্পর্কে",
     description:
-      "ফার্ম ম্যানেজার একটি স্মার্ট কৃষি প্ল্যাটফর্ম, যা কৃষকদের আবহাওয়া, ফসল এবং কাজ ব্যবস্থাপনায় সাহায্য করে।",
+      "ফার্ম ম্যানেজারে স্বাগতম, স্মার্ট কৃষির জন্য আপনার বিশ্বস্ত সঙ্গী। আমাদের প্ল্যাটফর্ম কৃষকদের আবহাওয়া পর্যবেক্ষণ, ফসল ব্যবস্থাপনা, কাজ ট্র্যাক করা এবং উৎপাদনশীলতা বাড়াতে সঠিক সিদ্ধান্ত নিতে সাহায্য করে।",
     mission:
-      "আমাদের লক্ষ্য কৃষকদের আধুনিক টুলস এবং প্রযুক্তি দিয়ে আরও সক্ষম করা।",
-    contactTitle: "যোগাযোগ",
+      "আমাদের লক্ষ্য আধুনিক টুল, নির্ভুল তথ্য এবং প্রযুক্তি নির্ভর সমাধানের মাধ্যমে কৃষকদের শক্তিশালী করে তোলা, যাতে কৃষিকাজ আরও সহজ এবং টেকসই হয়।",
+    contactTitle: "যোগাযোগ করুন",
     phone: "+91 98765 43210",
     email: "farmmanager@gmail.com",
     location: "শিলিগুড়ি, ভারত",
-    feedbackTitle: "প্রতিক্রিয়া",
-    feedbackPlaceholder: "আপনার প্রতিক্রিয়া লিখুন...",
-    feedbackButton: "সাবমিট",
-    footer: "টিম BLACK SYNTEX দ্বারা তৈরি",
+    feedbackTitle: "মতামত",
+    feedbackPlaceholder: "আপনার মতামত এখানে লিখুন...",
+    feedbackButton: "মতামত পাঠান",
+    footer: "টিম BLACK SYNTEX দ্বারা নির্মিত",
   },
-
   pa: {
     brandTitle: "ਐਗਰੋ ਸੁਵਿਧਾ",
-    brandSubtitle: "ਕਿਸਾਨਾਂ ਦਾ ਡਿਜ਼ੀਟਲ ਸਾਥੀ",
-    navHome: "ਹੋਮ",
+    brandSubtitle: "ਕਿਸਾਨ ਦਾ ਡਿਜ਼ਿਟਲ ਸਾਥੀ",
+    navHome: "ਘਰ",
     navCrops: "ਫਸਲਾਂ",
     navWeather: "ਮੌਸਮ",
     navSettings: "ਸੈਟਿੰਗਜ਼",
@@ -90,17 +86,17 @@ const aboutTexts = {
     navAbout: "ਸਾਡੇ ਬਾਰੇ",
     title: "ਸਾਡੇ ਬਾਰੇ",
     description:
-      "ਫਾਰਮ ਮੈਨੇਜਰ ਇੱਕ ਸਮਾਰਟ ਖੇਤੀ ਪ੍ਰਣਾਲੀ ਹੈ ਜੋ ਕਿਸਾਨਾਂ ਨੂੰ ਮੌਸਮ, ਫਸਲ ਅਤੇ ਕੰਮ ਪ੍ਰਬੰਧਨ ਵਿੱਚ ਮਦਦ ਕਰਦੀ ਹੈ।",
+      "ਫਾਰਮ ਮੈਨੇਜਰ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ, ਸਮਾਰਟ ਖੇਤੀ ਲਈ ਤੁਹਾਡਾ ਭਰੋਸੇਮੰਦ ਸਾਥੀ। ਸਾਡਾ ਪਲੇਟਫਾਰਮ ਕਿਸਾਨਾਂ ਨੂੰ ਮੌਸਮ ਦੇਖਣ, ਫਸਲਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰਨ, ਕੰਮ ਟਰੈਕ ਕਰਨ ਅਤੇ ਉਤਪਾਦਕਤਾ ਵਧਾਉਣ ਲਈ ਸੋਚ-ਸਮਝ ਕੇ ਫੈਸਲੇ ਲੈਣ ਵਿੱਚ ਮਦਦ ਕਰਦਾ ਹੈ।",
     mission:
-      "ਸਾਡਾ ਉਦੇਸ਼ ਨਵੀਂ ਤਕਨਾਲੋਜੀ ਅਤੇ ਸਹੀ ਜਾਣਕਾਰੀ ਨਾਲ ਕਿਸਾਨਾਂ ਨੂੰ ਮਜ਼ਬੂਤ ਬਣਾਉਣਾ ਹੈ।",
-    contactTitle: "ਸੰਪਰਕ ਕਰੋ",
+      "ਸਾਡਾ ਮਿਸ਼ਨ ਕਿਸਾਨਾਂ ਨੂੰ ਆਧੁਨਿਕ ਟੂਲ, ਸਹੀ ਜਾਣਕਾਰੀ ਅਤੇ ਤਕਨਾਲੋਜੀ-ਅਧਾਰਿਤ ਹੱਲਾਂ ਨਾਲ ਸਸ਼ਕਤ ਕਰਨਾ ਹੈ, ਤਾਂ ਜੋ ਖੇਤੀ ਆਸਾਨ ਅਤੇ ਜ਼ਿਆਦਾ ਟਿੱਕਾਊ ਬਣ ਸਕੇ।",
+    contactTitle: "ਸਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰੋ",
     phone: "+91 98765 43210",
     email: "farmmanager@gmail.com",
-    location: "ਸਿਲਿਗੁੜੀ, ਭਾਰਤ",
+    location: "ਸਿਲਿਗੁਰੀ, ਭਾਰਤ",
     feedbackTitle: "ਫੀਡਬੈਕ",
-    feedbackPlaceholder: "ਆਪਣਾ ਫੀਡਬੈਕ ਲਿਖੋ...",
-    feedbackButton: "ਸਬਮਿਟ",
-    footer: "ਟੀਮ BLACK SYNTEX ਦੁਆਰਾ ਬਣਾਇਆ ਗਿਆ",
+    feedbackPlaceholder: "ਇੱਥੇ ਆਪਣਾ ਫੀਡਬੈਕ ਲਿਖੋ...",
+    feedbackButton: "ਫੀਡਬੈਕ ਭੇਜੋ",
+    footer: "ਟੀਮ BLACK SYNTEX ਦੁਆਰਾ ਤਿਆਰ ਕੀਤਾ ਗਿਆ",
   },
 };
 
@@ -112,34 +108,6 @@ export default function AboutUs() {
 
   const isActive = (path) =>
     location.pathname === path ? "active-nav-btn" : "";
-
-  // FEEDBACK STATE
-  const [feedback, setFeedback] = useState("");
-  const [feedbackList, setFeedbackList] = useState([]);
-
-  // Load stored feedback on page load
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("feedbackList")) || [];
-    setFeedbackList(stored);
-  }, []);
-
-  // Update localStorage when feedbackList changes
-  useEffect(() => {
-    localStorage.setItem("feedbackList", JSON.stringify(feedbackList));
-  }, [feedbackList]);
-
-  const handleSubmitFeedback = () => {
-    if (feedback.trim() === "") return;
-
-    const newFeedback = {
-      id: Date.now(),
-      message: feedback,
-      date: new Date().toLocaleString(),
-    };
-
-    setFeedbackList([newFeedback, ...feedbackList]);
-    setFeedback("");
-  };
 
   return (
     <div className="about-page">
@@ -154,32 +122,46 @@ export default function AboutUs() {
         </div>
 
         <div className="nav-pill">
-          <button className={isActive("/dashboard")} onClick={() => navigate("/dashboard")}>
+          <button
+            className={isActive("/dashboard")}
+            onClick={() => navigate("/dashboard")}
+          >
             <HomeIcon />
             <span className="nav-label">{text.navHome}</span>
           </button>
-
-          <button className={isActive("/manager")} onClick={() => navigate("/manager")}>
+          <button
+            className={isActive("/manager")}
+            onClick={() => navigate("/manager")}
+          >
             <Sprout />
             <span className="nav-label">{text.navCrops}</span>
           </button>
-
-          <button className={isActive("/weather")} onClick={() => navigate("/weather")}>
+          <button
+            className={isActive("/weather")}
+            onClick={() => navigate("/weather")}
+          >
             <Sun />
             <span className="nav-label">{text.navWeather}</span>
           </button>
-
-          <button className={isActive("/settings")} onClick={() => navigate("/settings")}>
+          <button
+            className={isActive("/settings")}
+            onClick={() => navigate("/settings")}
+          >
             <Settings />
             <span className="nav-label">{text.navSettings}</span>
           </button>
 
-          <button className={isActive("/language")} onClick={() => navigate("/language")}>
+          <button
+            className={isActive("/language")}
+            onClick={() => navigate("/language")}
+          >
             <Globe />
             <span className="nav-label">{text.navLanguage}</span>
           </button>
-
-          <button className={isActive("/about")} onClick={() => navigate("/about")}>
+          <button
+            className={isActive("/about")}
+            onClick={() => navigate("/about")}
+          >
             <Globe />
             <span className="nav-label">{text.navAbout}</span>
           </button>
@@ -191,50 +173,72 @@ export default function AboutUs() {
         <h1 className="about-title">{text.title}</h1>
 
         <p className="about-text">{text.description}</p>
+
         <p className="about-text">{text.mission}</p>
 
         {/* Contact Section */}
         <div className="about-contact-section">
-          <h2 className="about-title about-small-title">{text.contactTitle}</h2>
+          <h2 className="about-title about-small-title">
+            {text.contactTitle}
+          </h2>
 
-          <div className="about-contact-item">📞 <span>{text.phone}</span></div>
-          <div className="about-contact-item">📧 <span>{text.email}</span></div>
-          <div className="about-contact-item">📍 <span>{text.location}</span></div>
+          <div className="about-contact-item">
+            {/* Phone */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="#059669"
+              viewBox="0 0 24 24"
+            >
+              <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.61 21 3 13.39 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.21 2.2z" />
+            </svg>
+            <span>{text.phone}</span>
+          </div>
+
+          <div className="about-contact-item">
+            {/* Email */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="#059669"
+              viewBox="0 0 24 24"
+            >
+              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z" />
+            </svg>
+            <span>{text.email}</span>
+          </div>
+
+          <div className="about-contact-item">
+            {/* Location */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="#059669"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+            <span>{text.location}</span>
+          </div>
         </div>
 
         {/* Feedback Section */}
         <div className="about-feedback-section">
-          <h2 className="about-title about-small-title">{text.feedbackTitle}</h2>
-
+          <h2 className="about-title about-small-title">
+            {text.feedbackTitle}
+          </h2>
           <textarea
             rows="4"
             className="about-feedback-textarea"
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
             placeholder={text.feedbackPlaceholder}
           ></textarea>
 
-          <button
-            type="button"
-            className="about-feedback-btn"
-            onClick={handleSubmitFeedback}
-          >
+          <button type="button" className="about-feedback-btn">
             {text.feedbackButton}
           </button>
-
-          {/* Feedback List */}
-          <div className="feedback-list">
-            {feedbackList.length === 0 ? (
-              <p className="no-feedback">No feedback submitted yet.</p>
-            ) : (
-              feedbackList.map((item) => (
-                <div className="feedback-item" key={item.id}>
-                  <p>{item.message}</p>
-                  <span className="feedback-date">{item.date}</span>
-                </div>
-              ))
-            )}
-          </div>
         </div>
       </div>
 

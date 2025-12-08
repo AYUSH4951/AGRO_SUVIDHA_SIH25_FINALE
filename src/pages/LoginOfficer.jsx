@@ -1,6 +1,7 @@
 // src/pages/LoginOfficer.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/LoginOfficer.css";
 
 import { useLanguage } from "../context/LanguageContext";
@@ -86,6 +87,7 @@ const officerTexts = {
 function LoginOfficer() {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { login, setPersistenceForRemember } = useAuth();
   const text = officerTexts[language] || officerTexts.en;
 
   const [isEmail, setIsEmail] = useState(true);
@@ -99,13 +101,59 @@ function LoginOfficer() {
   const handleInput = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleLogin = () => {
+  const [remember, setRemember] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  const handleLogin = async () => {
+    setError("");
     if (!form.emailOrPhone || !form.password) {
       alert(text.errors.fillAll);
       return;
     }
-    // officer dashboard route (adjust if needed)
-    navigate("/field-officer/dashboard");
+
+    if (!isEmail) {
+      // phone login not implemented
+      alert(text.errors.fillAll);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      try {
+        await setPersistenceForRemember(remember);
+      } catch (persistErr) {
+        console.warn("Could not set persistence:", persistErr);
+      }
+
+      const cred = await login(form.emailOrPhone, form.password);
+
+      // persist a lightweight profile for routing/UX (used by dashboards)
+      try {
+        const user = cred && cred.user ? cred.user : null;
+        const stored = {
+          fullName: (user && (user.displayName || localStorage.getItem("displayName"))) || "Officer",
+          email: (user && user.email) || form.emailOrPhone,
+          role: "field_officer",
+        };
+        localStorage.setItem("userProfile", JSON.stringify(stored));
+        localStorage.setItem("farmerProfile", JSON.stringify(stored));
+        localStorage.setItem("agroUser", JSON.stringify(stored));
+        localStorage.setItem("displayName", stored.fullName);
+        localStorage.setItem("userName", stored.fullName);
+        localStorage.setItem("userEmail", stored.email || "");
+        window.dispatchEvent(new CustomEvent("agroProfileUpdated", { detail: stored }));
+      } catch (e) {
+        console.warn("Could not persist officer profile to localStorage:", e);
+      }
+
+      navigate("/field-officer/dashboard");
+    } catch (err) {
+      console.error("Officer login error:", err);
+      setError(err?.message || "Failed to sign in.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
