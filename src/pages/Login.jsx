@@ -107,7 +107,7 @@ const loginTexts = {
 function Login() {
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const { login, setPersistenceForRemember } = useAuth();
+  const { login, setPersistenceForRemember, getCurrentUserToken } = useAuth();
 
   const text = loginTexts[language] || loginTexts.en;
 
@@ -148,7 +148,51 @@ function Login() {
         console.warn("Could not set persistence:", persistErr);
       }
 
+      // Sign in first (token available only after auth)
       const cred = await login(form.emailOrPhone, form.password);
+
+      // Generate Firebase ID token and verify with backend
+      const token = await getCurrentUserToken();
+      console.log("Obtained user token:", token);
+      const verifyResp = await fetch("https://auth-backend-285018970008.asia-south1.run.app/verify-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!verifyResp.ok) {
+        throw new Error("Token verification failed. Please try again.");
+      }
+
+
+      // Push basic user data to backend
+      try {
+        await fetch("https://auth-backend-285018970008.asia-south1.run.app/data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            data: {
+              name:
+                (cred?.user && (cred.user.displayName || localStorage.getItem("displayName"))) ||
+                "Farmer",
+              email: cred?.user?.email || form.emailOrPhone,
+              phone: "",
+              address: "",
+              preferences: {
+                theme: "light",
+                notifications: true,
+              },
+            },
+            collection: "user_data",
+          }),
+        });
+      } catch (pushErr) {
+        console.warn("Could not push user data to backend:", pushErr);
+      }
 
       // Persist farmer profile with role flag for routing
       try {
@@ -176,6 +220,10 @@ function Login() {
       if (err?.code === "auth/user-not-found") message = text.userNotFound;
       else if (err?.code === "auth/wrong-password") message = text.wrongPassword;
       else if (err?.message) message = err.message;
+      // More friendly message for invalid credential
+      if (err?.code === "auth/invalid-credential") {
+        message = "Invalid credentials. Please check your email and password.";
+      }
       setError(message);
     } finally {
       setLoading(false);
@@ -207,7 +255,13 @@ function Login() {
       <form className="login-card" onSubmit={handleLogin}>
         <h3>{text.loginTitle}</h3>
 
-        {error && <div className="login-error">{error}</div>}
+        {error && (
+          <div className="login-error modern-alert error">
+            <div className="alert-title">Sign-in failed</div>
+            <div className="alert-body">{error}</div>
+          </div>
+        )}
+
 
         {/* TOGGLE EMAIL / PHONE */}
         <div className="login-toggle-buttons">

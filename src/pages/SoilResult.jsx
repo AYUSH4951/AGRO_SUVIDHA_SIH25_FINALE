@@ -118,7 +118,7 @@ function SoilResult() {
   } = result;
 
   const audioUrl = tts_audio_url
-    ? `http://localhost:8001${tts_audio_url}`
+    ? `https://soil-advisor-335197944718.asia-south1.run.app${tts_audio_url}`
     : null;
 
   useEffect(() => {

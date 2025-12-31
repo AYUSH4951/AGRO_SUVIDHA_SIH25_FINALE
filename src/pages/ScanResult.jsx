@@ -103,7 +103,7 @@ function ScanResult() {
   const { predicted_class, confidence, tts_audio_url, recommendation } = result;
 
   const audioUrl = tts_audio_url
-    ? `http://localhost:8002${tts_audio_url}`
+    ? `https://pest-detection-2wugdldpba-uc.a.run.app/${tts_audio_url}`
     : null;
 
   useEffect(() => {

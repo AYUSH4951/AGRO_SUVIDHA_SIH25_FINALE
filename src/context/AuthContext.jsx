@@ -47,6 +47,11 @@ export function AuthProvider({ children }) {
     return sendPasswordResetEmail(auth, email);
   }
 
+  async function getCurrentUserToken(forceRefresh = false) {
+    if (!auth.currentUser) throw new Error("No authenticated user to generate token.");
+    return auth.currentUser.getIdToken(forceRefresh);
+  }
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -62,6 +67,7 @@ export function AuthProvider({ children }) {
     logout,
     resetPassword,
     setPersistenceForRemember,
+    getCurrentUserToken,
   };
 
   return (

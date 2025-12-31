@@ -46,7 +46,47 @@ function FieldOfficerSignup() {
       return;
     }
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Generate Firebase ID token and verify with backend
+      const token = await cred.user.getIdToken();
+      const verifyResp = await fetch("https://auth-backend-285018970008.asia-south1.run.app/verify-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!verifyResp.ok) {
+        throw new Error("Token verification failed. Please try again.");
+      }
+      alert("User verified!");
+
+      // Push signup data to backend
+      try {
+        await fetch("https://auth-backend-285018970008.asia-south1.run.app/data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            data: {
+              name: fullName,
+              email,
+              phone: "",
+              address: "",
+              preferences: {
+                theme: "light",
+                notifications: true,
+              },
+            },
+            collection: "user_data",
+          }),
+        });
+      } catch (pushErr) {
+        console.warn("Could not push officer signup data to backend:", pushErr);
+      }
       setSuccess("Signup successful! You can now log in.");
       try {
         const profile = { fullName, email, role: "field_officer", createdAt: Date.now() };

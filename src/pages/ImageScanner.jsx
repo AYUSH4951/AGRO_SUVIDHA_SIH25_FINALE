@@ -85,7 +85,7 @@ function ImageScanner() {
 
       // pass language to backend as query param
       const res = await fetch(
-        `http://localhost:8006/analyze?lang=${encodeURIComponent(language)}`,
+        `https://unified-agro-api-hhpok5caua-uc.a.run.app/analyze?lang=${encodeURIComponent(language)}`,
         {
           method: "POST",
           body: formData,

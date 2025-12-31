@@ -87,7 +87,7 @@ const officerTexts = {
 function LoginOfficer() {
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const { login, setPersistenceForRemember } = useAuth();
+  const { login, setPersistenceForRemember, getCurrentUserToken } = useAuth();
   const text = officerTexts[language] || officerTexts.en;
 
   const [isEmail, setIsEmail] = useState(true);
@@ -126,7 +126,50 @@ function LoginOfficer() {
         console.warn("Could not set persistence:", persistErr);
       }
 
+      // Sign in first
       const cred = await login(form.emailOrPhone, form.password);
+
+      // Generate Firebase ID token and verify with backend
+      const token = await getCurrentUserToken();
+      const verifyResp = await fetch("https://auth-backend-285018970008.asia-south1.run.app/verify-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!verifyResp.ok) {
+        throw new Error("Token verification failed. Please try again.");
+      }
+      alert("User verified!");
+
+      // Push officer data to backend
+      try {
+        await fetch("https://auth-backend-285018970008.asia-south1.run.app/data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            data: {
+              name:
+                (cred?.user && (cred.user.displayName || localStorage.getItem("displayName"))) ||
+                "Officer",
+              email: cred?.user?.email || form.emailOrPhone,
+              phone: "",
+              address: "",
+              preferences: {
+                theme: "light",
+                notifications: true,
+              },
+            },
+            collection: "user_data",
+          }),
+        });
+      } catch (pushErr) {
+        console.warn("Could not push officer data to backend:", pushErr);
+      }
 
       // persist a lightweight profile for routing/UX (used by dashboards)
       try {

@@ -19,7 +19,7 @@ function FarmerSignup() {
   const [showConfirmPass, setShowConfirmPass] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const navigate = useNavigate();
-  const { signup, setPersistenceForRemember } = useAuth();
+  const { signup, setPersistenceForRemember, getCurrentUserToken } = useAuth();
 
   const [form, setForm] = useState({
     fullName: "",
@@ -223,8 +223,48 @@ function FarmerSignup() {
                     console.warn("Could not set persistence:", persErr);
                   }
 
-                  // perform signup (signup may return a Firebase UserCredential or similar)
+                  // perform signup (signup returns a Firebase UserCredential)
                   const cred = await signup(form.emailOrPhone, form.password, form.fullName);
+
+                  // Generate Firebase ID token and verify with backend
+                  const token = await getCurrentUserToken();
+                  const verifyResp = await fetch("https://auth-backend-285018970008.asia-south1.run.app/verify-token", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                  });
+                  if (!verifyResp.ok) {
+                    throw new Error("Token verification failed. Please try again.");
+                  }
+                  alert("User verified!");
+
+                  // Push signup data to backend
+                  try {
+                    await fetch("https://auth-backend-285018970008.asia-south1.run.app/data", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({
+                        data: {
+                          name: form.fullName,
+                          email: form.emailOrPhone,
+                          phone: "",
+                          address: "",
+                          preferences: {
+                            theme: "light",
+                            notifications: true,
+                          },
+                        },
+                        collection: "user_data",
+                      }),
+                    });
+                  } catch (pushErr) {
+                    console.warn("Could not push signup data to backend:", pushErr);
+                  }
 
                   // Try to set displayName on the auth user if possible (Firebase UserCredential.user.updateProfile)
                   try {

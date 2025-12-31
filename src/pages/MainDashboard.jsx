@@ -28,15 +28,12 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/Weather.css";
 import { useLanguage } from "../context/LanguageContext";
-import { useAuth } from "../context/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebaseConfig";
 
 const ENV_KEY = import.meta.env.VITE_WEATHERAPI_KEY || "";
 
 const dashboardTexts = {
   en: {
-    brandTitle: "AgroSubhidha",
+    brandTitle: "Agro Suvidha",
     brandSubtitle: "Farmer's Digital Companion",
     navHome: "Home",
     navCrops: "Crops",
@@ -97,7 +94,7 @@ const dashboardTexts = {
     mandiTitle: "Mandi Prices",
     mandiSub: "Check live market prices for your crops.",
     mandiCta: "View Market Prices",
-    soilTitle: "Soil Moisture",
+    soilTitle: "Soil Analysis",
     soilSub: "Monitor soil moisture and get irrigation advice.",
     soilCta: "Check Soil Status",
     mitraTitle: "Kisan Mitra Chatbot",
@@ -107,6 +104,7 @@ const dashboardTexts = {
     scanSub: "Leaves or Soil",
     appInfoTitle: "Agro Suvidha",
     appInfoSub: "AI-Powered Agricultural Advisory",
+    scanPrompt: "Use me to scan crops or leaves"
   },
   hi: {
     brandTitle: "एग्रो सुविधा",
@@ -181,6 +179,7 @@ const dashboardTexts = {
     scanSub: "पत्ते या मिट्टी",
     appInfoTitle: "एग्रो सुविधा",
     appInfoSub: "एआई आधारित कृषि सलाह",
+    scanPrompt: "फसलों या पत्तियों को स्कैन करने के लिए मुझे उपयोग करें"
   },
   bn: {
     brandTitle: "এগ্রো সুবিধা",
@@ -242,7 +241,7 @@ const dashboardTexts = {
     pestTitle: "পোকার শনাক্তকরণ ও সমাধান",
     pestSub: "ফসলের রোগ শনাক্ত করুন এবং চিকিৎসা জানুন।",
     pestCta: "পোকার শনাক্তকরণ খুলুন",
-    mandiTitle: "মণ্ডি দামের তথ্য",
+    mandiTitle: "মंडी দামের তথ্য",
     mandiSub: "আপনার ফসলের লাইভ বাজারদর দেখুন।",
     mandiCta: "বাজারদর দেখুন",
     soilTitle: "মাটির আর্দ্রতা",
@@ -255,6 +254,7 @@ const dashboardTexts = {
     scanSub: "পাতা বা মাটি",
     appInfoTitle: "এগ্রো সুবিধা",
     appInfoSub: "এআই-চালিত কৃষি পরামর্শ",
+    scanPrompt: "ফসল বা পাতা স্ক্যান করতে আমাকে ব্যবহার করুন"
   },
   pa: {
     brandTitle: "ਐਗਰੋ ਸੁਵਿਧਾ",
@@ -318,7 +318,7 @@ const dashboardTexts = {
     pestCta: "ਕੀਟ ਪਹਿਚਾਣ ਖੋਲ੍ਹੋ",
     mandiTitle: "ਮੰਡੀ ਭਾਅ",
     mandiSub: "ਆਪਣੀ ਫਸਲਾਂ ਦੇ ਲਾਈਵ ਮੰਡੀ ਭਾਅ ਵੇਖੋ।",
-    mandiCta: "ਮੰਡੀ भਾਅ ਵੇਖੋ",
+    mandiCta: "ਮੰਡੀ ਭਾਅ ਵੇਖੋ",
     soilTitle: "ਮਿੱਟੀ ਦੀ ਨਮੀ",
     soilSub: "ਮਿੱਟੀ ਦੀ ਨਮੀ ਵੇਖੋ ਅਤੇ ਸਿੰਚਾਈ ਸਲਾਹ ਲਵੋ।",
     soilCta: "ਮਿੱਟੀ ਦੀ ਸਥਿਤੀ ਵੇਖੋ",
@@ -329,6 +329,7 @@ const dashboardTexts = {
     scanSub: "ਪੱਤੇ ਜਾਂ ਮਿੱਟੀ",
     appInfoTitle: "ਐਗਰੋ ਸੁਵਿਧਾ",
     appInfoSub: "ਏਆਈ ਆਧਾਰਿਤ ਖੇਤੀਬਾੜੀ ਸਲਾਹ",
+    scanPrompt: "ਫਸਲਾਂ ਜਾਂ ਪੱਤਿਆਂ ਨੂੰ ਸਕੈਨ ਕਰਨ ਲਈ ਮੈਨੂੰ ਵਰਤੋ"
   },
 };
 
@@ -347,93 +348,10 @@ export default function Home() {
   const [loadingWeather, setLoadingWeather] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [farmerProfile, setFarmerProfile] = useState(() => {
-    try {
-      const keys = ["farmerProfile", "userProfile", "agroUser"];
-      for (const k of keys) {
-        const raw = localStorage.getItem(k);
-        if (raw) {
-          try {
-            const parsed = JSON.parse(raw);
-            if (parsed && (parsed.fullName || parsed.email)) return parsed;
-          } catch {}
-        }
-      }
-      const name =
-        localStorage.getItem("displayName") ||
-        localStorage.getItem("userName") ||
-        "Farmer";
-      const email = localStorage.getItem("userEmail") || "";
-      return { fullName: name, email };
-    } catch {
-      return { fullName: "Farmer", email: "" };
-    }
-  });
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
   const effectiveKey = ENV_KEY;
-
-  // Navigate to the correct profile page depending on role stored in profile/localStorage
-  const { currentUser } = useAuth();
-
-  const navigateToProfile = async () => {
-    try {
-      let role =
-        farmerProfile?.role ||
-        (() => {
-          const raw = localStorage.getItem("userProfile") || localStorage.getItem("farmerProfile");
-          if (!raw) return null;
-          try {
-            const parsed = JSON.parse(raw);
-            return parsed?.role || null;
-          } catch {
-            return null;
-          }
-        })();
-
-      // If role is not present, try to fetch from Firestore user doc (if available)
-      if (!role && currentUser && currentUser.uid) {
-        try {
-          const snap = await getDoc(doc(db, "users", currentUser.uid));
-          if (snap && snap.exists()) {
-            const data = snap.data();
-            if (data?.role) role = data.role;
-
-            // persist a lightweight profile for UI routing
-            const stored = {
-              fullName: data?.displayName || localStorage.getItem("displayName") || currentUser.displayName || "User",
-              email: data?.email || currentUser.email || "",
-              role: role || null,
-            };
-            try {
-              localStorage.setItem("userProfile", JSON.stringify(stored));
-              localStorage.setItem("farmerProfile", JSON.stringify(stored));
-              localStorage.setItem("agroUser", JSON.stringify(stored));
-              localStorage.setItem("displayName", stored.fullName);
-              localStorage.setItem("userName", stored.fullName);
-              localStorage.setItem("userEmail", stored.email || "");
-              window.dispatchEvent(new CustomEvent("agroProfileUpdated", { detail: stored }));
-            } catch (e) {
-              // ignore storage errors
-            }
-          }
-        } catch (e) {
-          // ignore firestore errors
-          console.warn("Could not fetch user role:", e);
-        }
-      }
-
-      if (role === "field_officer" || role === "officer") {
-        navigate("/field-officer-profile");
-      } else {
-        navigate("/farmer-profile");
-      }
-    } catch (e) {
-      navigate("/farmer-profile");
-    }
-  };
 
   const requestLocation = useCallback(() => {
     if (!navigator.geolocation) {
@@ -488,9 +406,8 @@ export default function Home() {
       } else {
         setWeather(json);
         const locText = json.location
-          ? `${text.locDetected}: ${json.location.name}${
-              json.location.region ? ", " + json.location.region : ""
-            }`
+          ? `${text.locDetected}: ${json.location.name}${json.location.region ? ", " + json.location.region : ""
+          }`
           : `${text.locDetected}.`;
         setLocationMsg(locText);
       }
@@ -525,16 +442,6 @@ export default function Home() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
-
-  useEffect(() => {
-    // listen for profile updates from other components
-    const handle = (e) => {
-      const p = e?.detail || farmerProfile;
-      setFarmerProfile(p);
-    };
-    window.addEventListener("agroProfileUpdated", handle);
-    return () => window.removeEventListener("agroProfileUpdated", handle);
   }, []);
 
   const isLoading = loadingLocation || loadingWeather;
@@ -609,23 +516,9 @@ export default function Home() {
   });
 
   const handleLogout = () => {
-    // perform firebase logout, then clear local/session storage and navigate
-    (async () => {
-      try {
-        await logout();
-      } catch (e) {
-        // ignore logout errors but proceed to clear storage
-        console.warn("Logout failed:", e);
-      }
-      try {
-        localStorage.clear();
-        sessionStorage.clear();
-      } catch (e) {
-        // ignore storage errors
-      }
-      // After logout, send users to the Home page
-      navigate("/");
-    })();
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate("/login");
   };
 
   const isActive = (path) =>
@@ -643,7 +536,7 @@ export default function Home() {
         {/* TOP BAR WITH BRAND + PILL NAV */}
         <div className="topbar">
           <div className="brand">
-            <div className="brand-icon">🌱</div>
+            {/* removed left logo: nothing to the left */}
             <div className="brand-text">
               <div className="brand-title">{text.brandTitle}</div>
               <div className="brand-subtitle">{text.brandSubtitle}</div>
@@ -690,7 +583,7 @@ export default function Home() {
               className={isActive("/about")}
               onClick={() => navigate("/about")}
             >
-              <Globe />
+              <Info />
               <span className="nav-label">{text.navAbout}</span>
             </button>
           </div>
@@ -709,14 +602,6 @@ export default function Home() {
           {/* WEATHER CARD */}
           <section className="weather-shell">
             <div className="section-inner">
-              <div className="location-row">
-                <MapPin />
-                <span>
-                  {locationMsg}
-                  {isLoading ? " (Loading...)" : ""}
-                </span>
-              </div>
-
               {errorMsg && <div className="error-box">{errorMsg}</div>}
 
               <div className={`weather-card-new ${weatherBgClass()}`}>
@@ -729,10 +614,20 @@ export default function Home() {
                       <span className="temperature-big">
                         {tempC !== null ? `${Math.round(tempC)}°C` : "--°C"}
                       </span>
-                      <span className="badge">{conditionText}</span>
                     </div>
+
+                    {/* weather condition right under temperature */}
                     <p className="weather-desc-main">
                       {weather?.current?.condition?.text || "Fetching weather..."}
+                    </p>
+
+                    {/* location moved below the weather condition */}
+                    <p className="location-inside">
+                      <MapPin style={{ width: 14, height: 14, marginRight: 6, verticalAlign: "middle" }} />
+                      <span>
+                        {locationMsg}
+                        {isLoading ? " (Loading...)" : ""}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -755,9 +650,7 @@ export default function Home() {
                   </div>
                   <div>
                     <Sun /> AQI:{" "}
-                    {aqi !== null
-                      ? `${Math.round(aqi)} (${aqiCategory()})`
-                      : "--"}
+                    {aqi !== null ? `${Math.round(aqi)} (${aqiCategory()})` : "--"}
                   </div>
                 </div>
               </div>
@@ -873,16 +766,93 @@ export default function Home() {
             type="button"
             className="scan-wrapper"
             onClick={() => navigate("/scan")}
+            aria-label="Open scanner"
           >
-            <div className="scan-main-circle">
-              <span className="scan-main-icon">📷</span>
+            <div
+              style={{
+                position: "relative",
+                width: 120,
+                height: 120,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* OUTER RING — with soft yellow glow */}
+              <div
+                className="scan-main-circle"
+                style={{
+                  width: 120,
+                  height: 120,
+                  background: "#ffffff",
+                  borderRadius: "50%",
+                  boxShadow:
+                    "0 0 22px rgba(255, 215, 0, 0.35), 0 18px 35px rgba(0,0,0,0.12)", // <-- yellow glow added
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {/* INNER WHITE DISK */}
+                <div
+                  style={{
+                    width: 78,
+                    height: 78,
+                    borderRadius: "50%",
+                    background: "#ffffff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 6px 16px rgba(2,6,23,0.12)",
+                  }}
+                >
+                  {/* GREEN CAMERA ICON */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#16a34a"
+                    strokeWidth="2.3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                    <circle cx="12" cy="13" r="4" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
-            <div className="scan-main-pill">
-              <span className="scan-main-title">{text.scanTitle}</span>
-              <span className="scan-main-subtitle">{text.scanSub}</span>
+            {/* SMALL GREEN PILL — one line */}
+            <div
+              className="scan-main-pill"
+              style={{
+                marginTop: 8,
+                padding: "8px 18px",
+                borderRadius: "999px",
+                background: "#16a34a",
+                boxShadow: "0 12px 26px rgba(21,128,61,0.38)",
+                textAlign: "center",
+                minWidth: "210px",
+                maxWidth: "240px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "15px",
+                  fontWeight: 700,
+                  color: "#ffffff",
+                }}
+              >
+                Use me to scan leaves or soil
+              </span>
             </div>
           </button>
+
+
 
           {/* SIDEBAR SHEET */}
           <div className={`sheet ${sheetOpen ? "open" : ""}`}>
@@ -892,14 +862,12 @@ export default function Home() {
             </div>
 
             <div className="profile-card">
-              <div className="profile-avatar">
-                {(farmerProfile.fullName || "F").charAt(0).toUpperCase()
-                }
-              </div>
+              <div className="profile-avatar">R</div>
               <div className="profile-info">
-                <h3>{farmerProfile.fullName || "Farmer"}</h3>
+                <h3>Ram Kumar</h3>
                 <p>
-                  <MapPin style={{ width: 12, height: 12 }} /> {locationMsg || (farmerProfile.location || "Unknown")}
+                  <MapPin style={{ width: 12, height: 12 }} /> Siliguri, West
+                  Bengal
                 </p>
                 <p>{text.profile}</p>
               </div>
@@ -907,7 +875,7 @@ export default function Home() {
             </div>
 
             <div className="menu">
-              <button onClick={navigateToProfile}>
+              <button onClick={() => navigate("/profile")}>
                 <div className="menu-icon">
                   <User />
                 </div>

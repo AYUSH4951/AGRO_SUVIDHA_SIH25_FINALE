@@ -575,8 +575,6 @@ body.sidebar-open {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  text-align: left;
   padding: 12px;
   border: none;
   background: none;
@@ -595,14 +593,6 @@ body.sidebar-open {
   border-radius: 8px;
   margin-right: 12px;
   color: #16a34a;
-}
-
-.menu-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  flex: 1;
 }
 
 .menu-text h4 {

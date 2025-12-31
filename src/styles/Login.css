@@ -222,6 +222,40 @@
   font-weight: 600;
 }
 
+/* Modern inline alerts */
+.modern-alert {
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border: 1px solid transparent;
+  background: #f5f7fa;
+  color: #1f2a3d;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+.modern-alert .alert-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.modern-alert .alert-body {
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+.modern-alert.error {
+  border-color: #f8d7da;
+  background: #fff5f5;
+  color: #8a1f2b;
+}
+.modern-alert.success {
+  border-color: #d1e7dd;
+  background: #f1fff4;
+  color: #0f5132;
+}
+.modern-alert.info {
+  border-color: #cfe2ff;
+  background: #f5f9ff;
+  color: #0c4371;
+}
+
 /* ============ RESPONSIVE ============ */
 @media (min-width: 768px) {
   .login-hero {
