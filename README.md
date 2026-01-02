@@ -100,37 +100,36 @@ The proposed solution integrates Artificial Intelligence, Machine Learning, and 
 
 ## Project Directory Structure
 
+```text
 FINALE_SIH_2025/
 │
-├── .env                          # Environment variables
-├── .env.local.example            # Sample environment configuration
-├── .gitignore                    # Git ignored files
-├── README.md                     # Project documentation
+├── .env
+├── .env.local.example
+├── .gitignore
+├── README.md
 │
-├── public/                       # Public assets
+├── public/
 │
-├── src/                          # Application source code
-│   ├── assets/                   # Images, icons, static assets
-│   ├── components/               # Reusable React components
-│   ├── context/                  # Global state and language context
-│   ├── pages/                    # Application pages
-│   ├── styles/                   # CSS stylesheets
-│   ├── App.jsx                   # Root component
-│   ├── main.jsx                  # Entry point
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── context/
+│   ├── pages/
+│   ├── styles/
+│   ├── App.jsx
+│   ├── main.jsx
 │
-├── components/                   # Shared UI components
+├── components/
+├── firebase/
+├── dist/
+├── node_modules/
 │
-├── firebase/                     # Firebase configuration
-│
-├── dist/                         # Production build output
-│
-├── node_modules/                 # Project dependencies
-│
-├── package.json                  # Dependencies and scripts
-├── package-lock.json             # Dependency lock file
-├── vite.config.js                # Vite configuration
-├── eslint.config.js              # ESLint configuration
-└── index.html                    # Main HTML file
+├── package.json
+├── package-lock.json
+├── vite.config.js
+├── eslint.config.js
+└── index.html
+```
 
 ---
 
