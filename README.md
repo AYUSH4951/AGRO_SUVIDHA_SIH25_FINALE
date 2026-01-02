@@ -80,6 +80,7 @@ The proposed solution integrates Artificial Intelligence, Machine Learning, and 
 
 ### Backend and APIs
 - Google Gemini API
+- Python (Flask)
 - OpenWeather API
 - Location / Geocoding API
 
